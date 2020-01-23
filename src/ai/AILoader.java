@@ -21,13 +21,16 @@ public class AILoader {
 	private final double SCALER = 300.0;
 	private MultiLayerNetwork MLN;
 	private int testSet1, testSet2, testSet3;
+	private INDArray data, newData;
+	private SerialPort sp;
+	private OutputStream outStream;
+	private InputStream inStream;
 	
 	/**
 	 * Launches a series of 3 tests to assert the accuracy of the loaded network and receives data to analyze.
 	 * @throws IOException If there is a problem loading the different files for the network (.zip)
-	 * @throws InterruptedException If the sleep instruction is interupted
 	 */
-	public void launchAI() throws IOException, InterruptedException {
+	public void launchAI() throws IOException{
 
 		MLN = MultiLayerNetwork.load(new File("resources/AI.zip"), false);
 		
@@ -42,7 +45,7 @@ public class AILoader {
 		System.out.print("Results for test 3 [EXPECTED FORWARD] : ");
 		afficherResultat(testSet3);
 		
-		SerialPort sp = SerialPort.getCommPort("com7");
+		sp = SerialPort.getCommPort("com7");
 		sp.setComPortParameters(115200, 8, 1, 0);
 		sp.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
 		
@@ -53,19 +56,17 @@ public class AILoader {
 			return;
 		}
 
-		OutputStream outStream = sp.getOutputStream();
-		InputStream inStream = sp.getInputStream();
+		outStream = sp.getOutputStream();
+		inStream = sp.getInputStream();
 
 		System.out.println("Testing with car ...");
 
 		outStream.write(5);
 		outStream.flush();
 
-		Thread.sleep(250);
-
 		while(true) {
 			int[] response = receive(inStream, outStream);
-			System.out.println("D : " + response[2] + " A : " + response[0] + " G : " + response[1]);
+			System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1]);
 			int result = makeDecision(response[1],response[0],response[2]);
 			afficherResultat(result);
 			if(result == 2) {
@@ -86,11 +87,11 @@ public class AILoader {
 	 * @return Returns the index of the array with the highest percentage (Which represents the right decision)
 	 */
 	public int makeDecision(double d, double a, double g) {
-		INDArray data = Nd4j.zeros(1,3);
+		data = Nd4j.zeros(1,3);
 		data.putScalar(0, d/SCALER);
 		data.putScalar(1, a/SCALER);
 		data.putScalar(2, g/SCALER);
-		INDArray newData = MLN.output(data);
+		newData = MLN.output(data);
 		double decision = 0;
 		int decisionIndex = 3;
 		for(int i = 0; i < newData.length(); i++) {
@@ -110,7 +111,7 @@ public class AILoader {
 	 * @throws IOException When the I/O encounters a problem
 	 * @throws InterruptedException When the sleep thread is interrupted
 	 */
-	public int[] receive(InputStream inStream, OutputStream outStream) throws NumberFormatException, IOException, InterruptedException {
+	public int[] receive(InputStream inStream, OutputStream outStream) throws NumberFormatException, IOException{
 		int[] tab = new int[3];
 		outStream.write(100);
 		outStream.flush();

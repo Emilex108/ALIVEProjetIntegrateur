@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
+import ai.AILoader;
+
 public class Application {
 
 	private JFrame frame;
@@ -17,6 +19,8 @@ public class Application {
 				try {
 					Application window = new Application();
 					window.frame.setVisible(true);
+					AILoader ai = new AILoader();
+					ai.launchAI();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

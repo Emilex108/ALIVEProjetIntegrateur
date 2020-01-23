@@ -18,7 +18,10 @@ import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.learning.config.Nadam;
 import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
-
+/**
+ * 
+ * @author Émile Gagné
+ */
 public class AICreator {
 
     public static void main(String[] args) throws Exception {
