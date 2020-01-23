@@ -65,8 +65,10 @@ public class AILoader {
 		outStream.flush();
 
 		while(true) {
+			long start = System.nanoTime();
 			int[] response = receive(inStream, outStream);
-			System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1]);
+			long delay = (System.nanoTime() - start);
+			System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
 			int result = makeDecision(response[1],response[0],response[2]);
 			afficherResultat(result);
 			if(result == 2) {
@@ -111,7 +113,7 @@ public class AILoader {
 	 * @throws IOException When the I/O encounters a problem
 	 * @throws InterruptedException When the sleep thread is interrupted
 	 */
-	public int[] receive(InputStream inStream, OutputStream outStream) throws NumberFormatException, IOException{
+	public int[] receive(InputStream inStream, OutputStream outStream) throws NumberFormatException, IOException {
 		int[] tab = new int[3];
 		outStream.write(100);
 		outStream.flush();
