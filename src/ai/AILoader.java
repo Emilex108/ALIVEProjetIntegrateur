@@ -31,9 +31,9 @@ public class AILoader {
 	 * @throws IOException If there is a problem loading the different files for the network (.zip)
 	 */
 	public void launchAI() throws IOException{
-
+		// Loads the network using the .zip file containing the configuration of the trained network
 		MLN = MultiLayerNetwork.load(new File("resources/AI.zip"), false);
-		
+		// Create 3 different simulation of inputs to test the results
 		testSet1 = makeDecision(30,30,5);
 		testSet2 = makeDecision(5,30,30);
 		testSet3 = makeDecision(30,30,30);
