@@ -11,12 +11,14 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
 import com.fazecast.jSerialComm.SerialPort;
+
+import main.Application;
 /**
  * This class is used to load the trained AI and feed it the data gathered from the car sensors. 
  * It's sole purpose is to analyze that data and give an answer according to it.
  * @author Émile Gagné
  */
-public class AILoader {
+public class AILoader implements Runnable{
 
 	private final double SCALER = 300.0;
 	private MultiLayerNetwork MLN;
@@ -26,13 +28,20 @@ public class AILoader {
 	private OutputStream outStream;
 	private InputStream inStream;
 	
+	public AILoader(OutputStream outStream, InputStream inStream) throws IOException {
+		// Loads the network using the .zip file containing the configuration of the trained network
+		MLN = MultiLayerNetwork.load(new File("resources/AI.zip"), false);
+		
+		this.outStream = outStream;
+		this.inStream = inStream;
+	}
+	
 	/**
 	 * Launches a series of 3 tests to assert the accuracy of the loaded network and receives data to analyze.
 	 * @throws IOException If there is a problem loading the different files for the network (.zip)
 	 */
-	public void launchAI() throws IOException{
-		// Loads the network using the .zip file containing the configuration of the trained network
-		MLN = MultiLayerNetwork.load(new File("resources/AI.zip"), false);
+	public void launchAI(OutputStream outStream, InputStream inStream) throws IOException{
+		
 		// Create 3 different simulation of inputs to test the results
 		testSet1 = makeDecision(30,30,5);
 		testSet2 = makeDecision(5,30,30);
@@ -44,24 +53,10 @@ public class AILoader {
 		afficherResultat(testSet2);
 		System.out.print("Results for test 3 [EXPECTED FORWARD] : ");
 		afficherResultat(testSet3);
-		
-		sp = SerialPort.getCommPort("com7");
-		sp.setComPortParameters(115200, 8, 1, 0);
-		sp.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
-		
-		if(sp.openPort()) {
-			System.out.println("Port open");
-		}else {
-			System.out.println("Port closed");
-			return;
-		}
-
-		outStream = sp.getOutputStream();
-		inStream = sp.getInputStream();
 
 		System.out.println("Testing with car ...");
 
-		while(true) {
+		while(Application.getaiOn()) {
 			long start = System.nanoTime();
 			int[] response = receive(inStream, outStream);
 			long delay = (System.nanoTime() - start);
@@ -146,6 +141,16 @@ public class AILoader {
 			System.out.println("Forward");
 			break;
 		}
+	}
+
+	@Override
+	public void run() {
+		try {
+			launchAI(outStream, inStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }
