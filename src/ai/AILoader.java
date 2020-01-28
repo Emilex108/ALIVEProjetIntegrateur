@@ -61,14 +61,11 @@ public class AILoader {
 
 		System.out.println("Testing with car ...");
 
-		outStream.write(5);
-		outStream.flush();
-
 		while(true) {
 			long start = System.nanoTime();
 			int[] response = receive(inStream, outStream);
 			long delay = (System.nanoTime() - start);
-			System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
+			 System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
 			int result = makeDecision(response[1],response[0],response[2]);
 			afficherResultat(result);
 			if(result == 2) {
