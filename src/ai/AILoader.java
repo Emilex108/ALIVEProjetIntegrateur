@@ -18,7 +18,7 @@ import main.Application;
  * It's sole purpose is to analyze that data and give an answer according to it.
  * @author Émile Gagné
  */
-public class AILoader implements Runnable{
+public class AILoader extends Thread{
 
 	private final double SCALER = 300.0;
 	private MultiLayerNetwork MLN;
@@ -28,10 +28,8 @@ public class AILoader implements Runnable{
 	private OutputStream outStream;
 	private InputStream inStream;
 	
-	public AILoader(OutputStream outStream, InputStream inStream) throws IOException {
-		// Loads the network using the .zip file containing the configuration of the trained network
-		MLN = MultiLayerNetwork.load(new File("resources/AI.zip"), false);
-		
+	public AILoader(OutputStream outStream, InputStream inStream, MultiLayerNetwork MLN) throws IOException {
+		this.MLN = MLN;
 		this.outStream = outStream;
 		this.inStream = inStream;
 	}
@@ -41,20 +39,6 @@ public class AILoader implements Runnable{
 	 * @throws IOException If there is a problem loading the different files for the network (.zip)
 	 */
 	public void launchAI(OutputStream outStream, InputStream inStream) throws IOException{
-		
-		// Create 3 different simulation of inputs to test the results
-		testSet1 = makeDecision(30,30,5);
-		testSet2 = makeDecision(5,30,30);
-		testSet3 = makeDecision(30,30,30);
-		
-		System.out.print("Results for test 1 [EXPECTED LEFT] : ");
-		afficherResultat(testSet1);
-		System.out.print("Results for test 2 [EXPECTED RIGHT] : ");
-		afficherResultat(testSet2);
-		System.out.print("Results for test 3 [EXPECTED FORWARD] : ");
-		afficherResultat(testSet3);
-
-		System.out.println("Testing with car ...");
 
 		while(Application.getaiOn()) {
 			long start = System.nanoTime();
@@ -146,8 +130,23 @@ public class AILoader implements Runnable{
 	@Override
 	public void run() {
 		try {
-			launchAI(outStream, inStream);
-		} catch (IOException e) {
+		while(Application.getaiOn()) {
+			long start = System.nanoTime();
+			int[] response = receive(inStream, outStream);
+			long delay = (System.nanoTime() - start);
+			 System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
+			int result = makeDecision(response[1],response[0],response[2]);
+			afficherResultat(result);
+			if(result == 2) {
+				outStream.write(2);
+			}else if(result == 1) {
+				outStream.write(4);
+			}else {
+				outStream.write(1);
+			}
+			outStream.flush();
+		}
+		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		

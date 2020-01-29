@@ -16,6 +16,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+
 import com.fazecast.jSerialComm.SerialPort;
 
 import ai.AILoader;
@@ -54,8 +56,9 @@ public class Application {
 	private static JTextField tfDroite;
 	private JPanel panel_Output = new JPanel();
 	private static AILoader ai;
-	public static boolean autoPilotOn = false;
-	public static boolean aiOn = false;
+	private static boolean autoPilotOn = false;
+	private static boolean aiOn = false;
+	private static MultiLayerNetwork MLN;
 
 	/**
 	 * Launch the application.
@@ -76,10 +79,10 @@ public class Application {
 						System.out.println("Port closed");
 						return;
 					}
-					
+					// Loads the network using the .zip file containing the configuration of the trained network
+					MLN = MultiLayerNetwork.load(new File("resources/AI.zip"), false);
 					outStream = sp.getOutputStream();
 					inStream = sp.getInputStream();
-					ai = new AILoader(outStream, inStream);
 					System.out.println("Ready");
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -226,11 +229,11 @@ public class Application {
 			public void keyPressed(KeyEvent e) {
 				int c = e.getKeyCode ();
 				if (c==KeyEvent.VK_UP) {
-					send(3);
+					send(1);
 				} else if (c==KeyEvent.VK_RIGHT) { 
 					send(2);
 				} else if (c==KeyEvent.VK_DOWN) { 
-					send(1);
+					send(3);
 				} else if (c==KeyEvent.VK_LEFT) { 
 					send(4);
 				}
@@ -271,11 +274,15 @@ public class Application {
 		btnActivateAi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!aiOn) {
-				aiOn = true;
-				ai.run();
-				btnActivateAi.setText("Deactivate AI");
+					aiOn = true;
+					try {
+						ai = new AILoader(outStream, inStream, MLN);
+						ai.start();
+					} catch (IOException e) {}
+					btnActivateAi.setText("Deactivate AI");
 				}else {
 					aiOn = false;
+					ai.stop();
 					btnActivateAi.setText("Activate AI");
 					send(0);
 				}
