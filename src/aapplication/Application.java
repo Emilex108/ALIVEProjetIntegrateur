@@ -1,4 +1,4 @@
-package main;
+package aapplication;
 
 import java.awt.EventQueue;
 import java.awt.Graphics2D;
@@ -34,7 +34,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.net.URL;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import java.awt.event.KeyAdapter;
@@ -44,16 +43,19 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
-
+/**
+ * This is the main application of the ALIVE project, it manages the different threads and allows the user to interact with the car.
+ * @author Émile Gagné & Guillaume Blain
+ */
 public class Application {
 
 	private JFrame frame;
 	private JTextField txtConsolein;
 	private static OutputStream outStream;
 	private static InputStream inStream;
-	private static JTextField tfGauche;
-	private static JTextField tfMilieu;
-	private static JTextField tfDroite;
+	private static JTextField tfLeft;
+	private static JTextField tfMiddle;
+	private static JTextField tfRight;
 	private JPanel panel_Output = new JPanel();
 	private static AILoader ai;
 	private static boolean autoPilotOn = false;
@@ -126,15 +128,15 @@ public class Application {
 		btnUp.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				associerBoutonAvecImage(btnUp, "Up2.png",0);
+				associateImageWithButton(btnUp, "Up2.png",0);
 			}public void mouseExited(MouseEvent e) {
-				associerBoutonAvecImage(btnUp, "Up.png",0);
+				associateImageWithButton(btnUp, "Up.png",0);
 			}
 			public void mousePressed(MouseEvent e) {
-				associerBoutonAvecImage(btnUp, "Up.png",0);
+				associateImageWithButton(btnUp, "Up.png",0);
 				send(3);
 			}public void mouseReleased(MouseEvent e) {
-				associerBoutonAvecImage(btnUp, "Up2.png",0);
+				associateImageWithButton(btnUp, "Up2.png",0);
 				send(0);
 			}
 		});
@@ -150,15 +152,15 @@ public class Application {
 		btnDown.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				associerBoutonAvecImage(btnDown, "Up2.png",2);
+				associateImageWithButton(btnDown, "Up2.png",2);
 			}public void mouseExited(MouseEvent e) {
-				associerBoutonAvecImage(btnDown, "Up.png",2);
+				associateImageWithButton(btnDown, "Up.png",2);
 			}
 			public void mousePressed(MouseEvent e) {
-				associerBoutonAvecImage(btnDown, "Up.png",2);
+				associateImageWithButton(btnDown, "Up.png",2);
 				send(1);
 			}public void mouseReleased(MouseEvent e) {
-				associerBoutonAvecImage(btnDown, "Up2.png",2);
+				associateImageWithButton(btnDown, "Up2.png",2);
 				send(0);
 			}
 		});
@@ -173,15 +175,15 @@ public class Application {
 		btnRight.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				associerBoutonAvecImage(btnRight, "Up2.png",1);
+				associateImageWithButton(btnRight, "Up2.png",1);
 			}public void mouseExited(MouseEvent e) {
-				associerBoutonAvecImage(btnRight, "Up.png",1);
+				associateImageWithButton(btnRight, "Up.png",1);
 			}
 			public void mousePressed(MouseEvent e) {
-				associerBoutonAvecImage(btnRight, "Up.png",1);
+				associateImageWithButton(btnRight, "Up.png",1);
 				send(2);
 			}public void mouseReleased(MouseEvent e) {
-				associerBoutonAvecImage(btnRight, "Up2.png",1);
+				associateImageWithButton(btnRight, "Up2.png",1);
 				send(0);
 			}
 		});
@@ -196,26 +198,26 @@ public class Application {
 		btnLeft.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				associerBoutonAvecImage(btnLeft, "Up2.png",3);
+				associateImageWithButton(btnLeft, "Up2.png",3);
 			}public void mouseExited(MouseEvent e) {
-				associerBoutonAvecImage(btnLeft, "Up.png",3);
+				associateImageWithButton(btnLeft, "Up.png",3);
 			}
 			public void mousePressed(MouseEvent e) {
-				associerBoutonAvecImage(btnLeft, "Up.png",3);
+				associateImageWithButton(btnLeft, "Up.png",3);
 				send(4);
 			}public void mouseReleased(MouseEvent e) {
-				associerBoutonAvecImage(btnLeft, "Up2.png",3);
+				associateImageWithButton(btnLeft, "Up2.png",3);
 				send(0);
 			}
 		});
 		panelControl.add(btnLeft);
 
 
-		associerBoutonAvecImage(btnUp, "Up.png",0);
-		associerBoutonAvecImage(btnRight, "Up.png",1);
-		associerBoutonAvecImage(btnDown, "Up.png",2);
-		associerBoutonAvecImage(btnLeft, "Up.png",3);
-		
+		associateImageWithButton(btnUp, "Up.png",0);
+		associateImageWithButton(btnRight, "Up.png",1);
+		associateImageWithButton(btnDown, "Up.png",2);
+		associateImageWithButton(btnLeft, "Up.png",3);
+
 		JCheckBox chckbxModeClavier = new JCheckBox("Keyboard control mode");
 		chckbxModeClavier.setSelected(false);
 		chckbxModeClavier.addFocusListener(new FocusAdapter() {
@@ -241,7 +243,7 @@ public class Application {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				send(0);
-				
+
 			}
 		});
 		chckbxModeClavier.setBounds(6, 280, 321, 23);
@@ -251,7 +253,7 @@ public class Application {
 		JPanel panelBTN = new JPanel();
 		panelBTN.setBounds(0, 321, 353, 33);
 		frame.getContentPane().add(panelBTN);
-		
+
 		JButton btnAutopilotmode = new JButton("Activate Auto-pilot");
 		btnAutopilotmode.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -268,10 +270,11 @@ public class Application {
 			}
 		});
 		panelBTN.add(btnAutopilotmode);
-		
+
 		JButton btnActivateAi = new JButton("Activate AI");
-		
+
 		btnActivateAi.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent arg0) {
 				if(!aiOn) {
 					aiOn = true;
@@ -316,7 +319,7 @@ public class Application {
 		txtConsolein.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				if (e.getKeyChar() == e.VK_ENTER) {
+				if (e.getKeyChar() == KeyEvent.VK_ENTER) {
 					System.out.println(txtConsolein.getText());
 					txtConsolein.setText("");
 				}
@@ -336,103 +339,98 @@ public class Application {
 		btnSend.setBounds(443, 224, 79, 23);
 		panelConsole.add(btnSend);
 		panel_Output.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Outputs", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		
+
 		panel_Output.setBounds(732, 0, 333, 310);
 		frame.getContentPane().add(panel_Output);
 		panel_Output.setLayout(null);
-		
-		tfGauche = new JTextField();
-		tfGauche.setEditable(false);
-		tfGauche.setBounds(66, 54, 86, 20);
-		panel_Output.add(tfGauche);
-		tfGauche.setColumns(10);
-		
-		tfMilieu = new JTextField();
-		tfMilieu.setEditable(false);
-		tfMilieu.setBounds(66, 85, 86, 20);
-		panel_Output.add(tfMilieu);
-		tfMilieu.setColumns(10);
-		
-		tfDroite = new JTextField();
-		tfDroite.setEditable(false);
-		tfDroite.setBounds(66, 116, 86, 20);
-		panel_Output.add(tfDroite);
-		tfDroite.setColumns(10);
-		
-		JLabel lblGauche = new JLabel("Left :");
-		lblGauche.setBounds(8, 57, 59, 14);
-		panel_Output.add(lblGauche);
-		
-		JLabel lblMilieu = new JLabel("Center :");
-		lblMilieu.setBounds(8, 88, 59, 14);
-		panel_Output.add(lblMilieu);
-		
-		JLabel lblDroite = new JLabel("Right :");
-		lblDroite.setBounds(8, 119, 59, 14);
-		panel_Output.add(lblDroite);
-		
+
+		tfLeft = new JTextField();
+		tfLeft.setEditable(false);
+		tfLeft.setBounds(66, 54, 86, 20);
+		panel_Output.add(tfLeft);
+		tfLeft.setColumns(10);
+
+		tfMiddle = new JTextField();
+		tfMiddle.setEditable(false);
+		tfMiddle.setBounds(66, 85, 86, 20);
+		panel_Output.add(tfMiddle);
+		tfMiddle.setColumns(10);
+
+		tfRight = new JTextField();
+		tfRight.setEditable(false);
+		tfRight.setBounds(66, 116, 86, 20);
+		panel_Output.add(tfRight);
+		tfRight.setColumns(10);
+
+		JLabel lblLeft = new JLabel("Left :");
+		lblLeft.setBounds(8, 57, 59, 14);
+		panel_Output.add(lblLeft);
+
+		JLabel lblMiddle = new JLabel("Center :");
+		lblMiddle.setBounds(8, 88, 59, 14);
+		panel_Output.add(lblMiddle);
+
+		JLabel lblRight = new JLabel("Right :");
+		lblRight.setBounds(8, 119, 59, 14);
+		panel_Output.add(lblRight);
+
 		JButton btnReceive = new JButton("Receive");
 		btnReceive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 			}
 		});
 		btnReceive.setBounds(66, 147, 86, 23);
 		panel_Output.add(btnReceive);
-		
-		JLabel lblNewLabel = new JLabel("Distance sensors ");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblNewLabel.setBounds(8, 28, 144, 14);
-		panel_Output.add(lblNewLabel);
-		
+
+		JLabel lblSensorsDistance = new JLabel("Distance sensors ");
+		lblSensorsDistance.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblSensorsDistance.setBounds(8, 28, 144, 14);
+		panel_Output.add(lblSensorsDistance);
+
 		//CarPanel carPanel = new CarPanel(0, 0, 0);
-	//	carPanel.setBounds(350, 11, 371, 297);
+		//	carPanel.setBounds(350, 11, 371, 297);
 		//frame.getContentPane().add(carPanel);
-		
+
 	}
-	public void associerBoutonAvecImage(JButton leBouton, String fichierImage,int nbRotation) {
-		Image imgLue = null;
+	public void associateImageWithButton(JButton mainButton, String imageFile, int nbRotation) {
+		Image imgRead = null;
 		try {
-			imgLue = ImageIO.read(new File("resources/"+fichierImage));
+			imgRead = ImageIO.read(new File("resources/"+imageFile));
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Erreur pendant la lecture du fichier d'image");
 		}
 
-		// redimensionner l'image de la même grandeur que le bouton
-		Image imgRedim = imgLue.getScaledInstance(leBouton.getWidth(), leBouton.getHeight(), Image.SCALE_SMOOTH);
+		Image imgRedim = imgRead.getScaledInstance(mainButton.getWidth(), mainButton.getHeight(), Image.SCALE_SMOOTH);
 		BufferedImage img = toBufferedImage(imgRedim);
 		for(int i = 0;i<nbRotation;i++) {
 			img = rotateCw(img);
 		}
-		// au cas où le fond de l’image serait transparent
-		leBouton.setOpaque(false);
-		leBouton.setContentAreaFilled(false);
-		leBouton.setBorderPainted(false);
 
-		// associer l'image au bouton
-		leBouton.setText("");
-		leBouton.setIcon(new ImageIcon(img));
+		mainButton.setOpaque(false);
+		mainButton.setContentAreaFilled(false);
+		mainButton.setBorderPainted(false);
 
-		// on se débarrasse des images intermédiaires
-		imgLue.flush();
+		mainButton.setText("");
+		mainButton.setIcon(new ImageIcon(img));
+
+		imgRead.flush();
 		imgRedim.flush();
 	}
-	public BufferedImage rotateCw( BufferedImage img )
-	{
-		int         width  = img.getWidth();
-		int         height = img.getHeight();
-		BufferedImage   newImage = new BufferedImage( height, width, img.getType() );
+	public BufferedImage rotateCw(BufferedImage img){
+		int width  = img.getWidth();
+		int height = img.getHeight();
+		BufferedImage newImage = new BufferedImage(height, width, img.getType());
 
-		for( int i=0 ; i < width ; i++ )
-			for( int j=0 ; j < height ; j++ )
-				newImage.setRGB( height-1-j, i, img.getRGB(i,j) );
-
+		for(int i=0;i < width; i++) {
+			for(int j=0;j < height; j++) {
+				newImage.setRGB(height-1-j, i, img.getRGB(i,j));
+			}
+		}
 		return newImage;
 	}
-	public static BufferedImage toBufferedImage(Image img)
-	{
-		if (img instanceof BufferedImage)
-		{
+	public static BufferedImage toBufferedImage(Image img){
+		if (img instanceof BufferedImage){
 			return (BufferedImage) img;
 		}
 
@@ -456,24 +454,6 @@ public class Application {
 			System.out.println("Problem writing");
 		}
 
-	}
-	
-	public int receive() {
-		int val = 0;
-		String temp = "";
-		try {
-			while(val != 40){
-				val = inStream.read()-48;
-				System.out.println(val);
-				if(val != 40) {
-					temp += val+"";
-				}
-			}
-			return Integer.parseInt(temp);
-		} catch (IOException e) {
-			System.out.println("Problem receiving");
-			return 999999999;
-		}
 	}
 	public void await(int i) {
 		try {
@@ -499,28 +479,28 @@ public class Application {
 		Application.inStream = inStream;
 	}
 
-	public static JTextField getTfGauche() {
-		return tfGauche;
+	public static JTextField getTfLeft() {
+		return tfLeft;
 	}
 
-	public static void setTfGauche(JTextField tfGauche) {
-		Application.tfGauche = tfGauche;
+	public static void setTfLeft(JTextField tfLeft) {
+		Application.tfLeft = tfLeft;
 	}
 
-	public static JTextField getTfMilieu() {
-		return tfMilieu;
+	public static JTextField getTfMiddle() {
+		return tfMiddle;
 	}
 
-	public static void setTfMilieu(JTextField tfMilieu) {
-		Application.tfMilieu = tfMilieu;
+	public static void setTfMiddle(JTextField tfMiddle) {
+		Application.tfMiddle = tfMiddle;
 	}
 
-	public static JTextField getTfDroite() {
-		return tfDroite;
+	public static JTextField getTfRight() {
+		return tfRight;
 	}
 
-	public static void setTfDroite(JTextField tfDroite) {
-		Application.tfDroite = tfDroite;
+	public static void setTfRight(JTextField tfRight) {
+		Application.tfRight = tfRight;
 	}
 	public static boolean getautoPilotOn() {
 		return autoPilotOn;

@@ -1,6 +1,5 @@
 package ai;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,9 +9,7 @@ import org.jsoup.Jsoup;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
-import com.fazecast.jSerialComm.SerialPort;
-
-import main.Application;
+import aapplication.Application;
 /**
  * This class is used to load the trained AI and feed it the data gathered from the car sensors. 
  * It's sole purpose is to analyze that data and give an answer according to it.
@@ -22,18 +19,16 @@ public class AILoader extends Thread{
 
 	private final double SCALER = 300.0;
 	private MultiLayerNetwork MLN;
-	private int testSet1, testSet2, testSet3;
 	private INDArray data, newData;
-	private SerialPort sp;
 	private OutputStream outStream;
 	private InputStream inStream;
-	
+
 	public AILoader(OutputStream outStream, InputStream inStream, MultiLayerNetwork MLN) throws IOException {
 		this.MLN = MLN;
 		this.outStream = outStream;
 		this.inStream = inStream;
 	}
-	
+
 	/**
 	 * Launches a series of 3 tests to assert the accuracy of the loaded network and receives data to analyze.
 	 * @throws IOException If there is a problem loading the different files for the network (.zip)
@@ -44,7 +39,7 @@ public class AILoader extends Thread{
 			long start = System.nanoTime();
 			int[] response = receive(inStream, outStream);
 			long delay = (System.nanoTime() - start);
-			 System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
+			System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
 			int result = makeDecision(response[1],response[0],response[2]);
 			afficherResultat(result);
 			if(result == 2) {
@@ -127,29 +122,33 @@ public class AILoader extends Thread{
 		}
 	}
 
+	/**
+	 * This method is the main thread runner. It loops as long as the Application requires it.
+	 * It asks the Arduino for 3 sensors data and then passes it to the network before printing the results and sending an appropriate response to the Arduino.
+	 */
 	@Override
 	public void run() {
 		try {
-		while(Application.getaiOn()) {
-			long start = System.nanoTime();
-			int[] response = receive(inStream, outStream);
-			long delay = (System.nanoTime() - start);
-			 System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
-			int result = makeDecision(response[1],response[0],response[2]);
-			afficherResultat(result);
-			if(result == 2) {
-				outStream.write(2);
-			}else if(result == 1) {
-				outStream.write(4);
-			}else {
-				outStream.write(1);
+			while(Application.getaiOn()) {
+				long start = System.nanoTime();
+				int[] response = receive(inStream, outStream);
+				long delay = (System.nanoTime() - start);
+				System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
+				int result = makeDecision(response[1],response[0],response[2]);
+				afficherResultat(result);
+				if(result == 2) {
+					outStream.write(2);
+				}else if(result == 1) {
+					outStream.write(4);
+				}else {
+					outStream.write(1);
+				}
+				outStream.flush();
 			}
-			outStream.flush();
-		}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 }
