@@ -20,7 +20,7 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 
 import com.fazecast.jSerialComm.SerialPort;
 
-import ai.AILoader;
+import ai.AIPilot;
 import utillities.TextAreaOutputStream;
 
 import javax.swing.border.LineBorder;
@@ -57,7 +57,7 @@ public class Application {
 	private static JTextField tfMiddle;
 	private static JTextField tfRight;
 	private JPanel panel_Output = new JPanel();
-	private static AILoader ai;
+	private static AIPilot ai;
 	private static boolean autoPilotOn = false;
 	private static boolean aiOn = false;
 	private static MultiLayerNetwork MLN;
@@ -279,7 +279,7 @@ public class Application {
 				if(!aiOn) {
 					aiOn = true;
 					try {
-						ai = new AILoader(outStream, inStream, MLN);
+						ai = new AIPilot(outStream, inStream, MLN);
 						ai.start();
 					} catch (IOException e) {}
 					btnActivateAi.setText("Deactivate AI");

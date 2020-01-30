@@ -15,7 +15,7 @@ import aapplication.Application;
  * It's sole purpose is to analyze that data and give an answer according to it.
  * @author Émile Gagné
  */
-public class AILoader extends Thread{
+public class AIPilot extends Thread{
 
 	private final double SCALER = 300.0;
 	private MultiLayerNetwork MLN;
@@ -23,7 +23,7 @@ public class AILoader extends Thread{
 	private OutputStream outStream;
 	private InputStream inStream;
 
-	public AILoader(OutputStream outStream, InputStream inStream, MultiLayerNetwork MLN) throws IOException {
+	public AIPilot(OutputStream outStream, InputStream inStream, MultiLayerNetwork MLN) throws IOException {
 		this.MLN = MLN;
 		this.outStream = outStream;
 		this.inStream = inStream;
