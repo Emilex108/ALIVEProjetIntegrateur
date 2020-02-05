@@ -53,6 +53,8 @@ public class AIPilot extends Thread{
 			long start = System.nanoTime();
 			response = receive(inStream, outStream);
 			long delay = (System.nanoTime() - start);
+			trackPosition(delay);
+			map.addPoint(new Point((int)posX,(int)posY));
 			System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
 			int result = makeDecision(response[1],response[0],response[2]);
 			afficherResultat(result);
@@ -66,6 +68,7 @@ public class AIPilot extends Thread{
 			outStream.flush();
 		}
 	}
+
 	/**
 	 * This method handles the decision making of the AI based on the data sensors
 	 * @param d Distance on the right of the vehicle
@@ -117,6 +120,11 @@ public class AIPilot extends Thread{
 		while(inStream.available()==0);
 		int d = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 		tab[2] = d;
+		outStream.write(99);
+		outStream.flush();
+		while(inStream.available()==0);
+		int angle = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
+		System.out.println("Angle : + " + angle);
 		//add point
 		return tab;
 	}
@@ -178,9 +186,8 @@ public class AIPilot extends Thread{
 		double angleRad = Math.toRadians(angle);
 		double accelX = accel*Math.sin(angleRad);
 		double accelY = accel*Math.cos(angleRad);
-		//w
-		posX+=vitesse*timeS+0.5*accelX*Math.pow(timeS, 2);
-		posY+= vitesse*timeS+0.5*accelY*Math.pow(timeS, 2);
+		posX+= (vitesse*timeS+0.5*accelX*Math.pow(timeS, 2)/100);
+		posY+= (vitesse*timeS+0.5*accelY*Math.pow(timeS, 2)/100);
 	}
 
 }
