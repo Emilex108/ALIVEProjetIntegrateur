@@ -400,6 +400,11 @@ public class Application {
 		lblSensorsDistance.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblSensorsDistance.setBounds(8, 28, 144, 14);
 		panel_Output.add(lblSensorsDistance);
+		
+		JPanel detection_panel = new JPanel();
+		detection_panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Detection", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		detection_panel.setBounds(346, 0, 380, 310);
+		frame.getContentPane().add(detection_panel);
 
 		//CarPanel carPanel = new CarPanel(0, 0, 0);
 		//	carPanel.setBounds(350, 11, 371, 297);
