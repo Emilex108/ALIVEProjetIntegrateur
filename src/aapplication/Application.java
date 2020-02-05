@@ -44,6 +44,8 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
+import utillities.DetectionPanel;
+import java.awt.BorderLayout;
 /**
  * This is the main application of the ALIVE project, it manages the different threads and allows the user to interact with the car.
  * @author Émile Gagné & Guillaume Blain
@@ -405,11 +407,17 @@ public class Application {
 		detection_panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Detection", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		detection_panel.setBounds(346, 0, 380, 310);
 		frame.getContentPane().add(detection_panel);
-
-		//CarPanel carPanel = new CarPanel(0, 0, 0);
-		//	carPanel.setBounds(350, 11, 371, 297);
-		//frame.getContentPane().add(carPanel);
-
+		detection_panel.setLayout(new BorderLayout(0, 0));
+		
+		DetectionPanel detectionPanel = null;
+		try {
+			detectionPanel = new DetectionPanel();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		detection_panel.add(detectionPanel);
+		detectionPanel.repaint();
 	}
 	public void associateImageWithButton(JButton mainButton, String imageFile, int nbRotation) {
 		Image imgRead = null;
