@@ -100,25 +100,6 @@ public class AIPilot extends Thread{
 	 */
 	public int[] receive(InputStream inStream, OutputStream outStream) throws NumberFormatException, IOException {
 		int[] tab = new int[3];
-		outStream.write(98);
-		outStream.flush();
-		while(inStream.available()==0);
-<<<<<<< HEAD
-		accel = Double.parseDouble(Jsoup.parse(inStream.read()+"").text());
-		System.out.println("Acceleration : " );
-=======
-		double accel = Double.parseDouble(Jsoup.parse(inStream.read()+"").text());
-		System.out.println("Acceleration : " + accel);
->>>>>>> branch 'master' of https://github.com/Emilex108/ALIVEProjetIntegrateur.git
-		outStream.write(99);
-		outStream.flush();
-		while(inStream.available()==0);
-<<<<<<< HEAD
-		angle = Double.parseDouble(Jsoup.parse(inStream.read()+"").text());
-=======
-		double angle = Double.parseDouble(Jsoup.parse(inStream.read()+"").text());
-		System.out.println("Angle : " + angle);
->>>>>>> branch 'master' of https://github.com/Emilex108/ALIVEProjetIntegrateur.git
 		outStream.write(100);
 		outStream.flush();
 		while(inStream.available()==0);
