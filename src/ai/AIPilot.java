@@ -44,32 +44,6 @@ public class AIPilot extends Thread{
 	}
 
 	/**
-	 * Launches a series of 3 tests to assert the accuracy of the loaded network and receives data to analyze.
-	 * @throws IOException If there is a problem loading the different files for the network (.zip)
-	 */
-	public void launchAI(OutputStream outStream, InputStream inStream) throws IOException{
-
-		while(Application.getaiOn()) {
-			long start = System.nanoTime();
-			response = receive(inStream, outStream);
-			long delay = (System.nanoTime() - start);
-			trackPosition(delay);
-			map.addPoint(new Point((int)posX,(int)posY));
-			System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
-			int result = makeDecision(response[1],response[0],response[2]);
-			afficherResultat(result);
-			if(result == 2) {
-				outStream.write(2);
-			}else if(result == 1) {
-				outStream.write(4);
-			}else {
-				outStream.write(1);
-			}
-			outStream.flush();
-		}
-	}
-
-	/**
 	 * This method handles the decision making of the AI based on the data sensors
 	 * @param d Distance on the right of the vehicle
 	 * @param a Distance in front of the vehicle
@@ -123,8 +97,8 @@ public class AIPilot extends Thread{
 		outStream.write(99);
 		outStream.flush();
 		while(inStream.available()==0);
-		int angle = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
-		System.out.println("Angle : + " + angle);
+		angle = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
+		System.out.println("Angle : " + angle);
 		//add point
 		return tab;
 	}
@@ -158,6 +132,8 @@ public class AIPilot extends Thread{
 				long start = System.nanoTime();
 				int[] response = receive(inStream, outStream);
 				long delay = (System.nanoTime() - start);
+				trackPosition(delay);
+				map.addPoint(new Point((int)posX,(int)posY));
 				System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
 				int result = makeDecision(response[1],response[0],response[2]);
 				afficherResultat(result);
@@ -177,6 +153,7 @@ public class AIPilot extends Thread{
 	}
 	
 	public void trackPosition(long delay) {
+		accel=0;
 		if(accel<BRAKE_ACCEL) {
 			vitesse = 0;
 		}else {
@@ -186,8 +163,9 @@ public class AIPilot extends Thread{
 		double angleRad = Math.toRadians(angle);
 		double accelX = accel*Math.sin(angleRad);
 		double accelY = accel*Math.cos(angleRad);
-		posX+= (vitesse*timeS+0.5*accelX*Math.pow(timeS, 2)/100);
-		posY+= (vitesse*timeS+0.5*accelY*Math.pow(timeS, 2)/100);
+		posX+= (vitesse*timeS+0.5*accelX*Math.pow(timeS, 2)/100)*100;
+		posY+= (vitesse*timeS+0.5*accelY*Math.pow(timeS, 2)/100)*20;
+		System.out.println("PosX : " + posX + " PosY : "+ posY);
 	}
 
 }
