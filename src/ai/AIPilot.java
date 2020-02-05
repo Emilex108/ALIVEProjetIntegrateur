@@ -1,5 +1,6 @@
 package ai;
 
+import java.awt.Point;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,6 +11,7 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
 import aapplication.Application;
+import utillities.Mapping2D;
 /**
  * This class is used to load the trained AI and feed it the data gathered from the car sensors. 
  * It's sole purpose is to analyze that data and give an answer according to it.
@@ -22,11 +24,14 @@ public class AIPilot extends Thread{
 	private INDArray data, newData;
 	private OutputStream outStream;
 	private InputStream inStream;
+	private int[] response;
+	private Mapping2D map;
 
 	public AIPilot(OutputStream outStream, InputStream inStream, MultiLayerNetwork MLN) throws IOException {
 		this.MLN = MLN;
 		this.outStream = outStream;
 		this.inStream = inStream;
+		map = new Mapping2D();
 	}
 
 	/**
@@ -37,7 +42,7 @@ public class AIPilot extends Thread{
 
 		while(Application.getaiOn()) {
 			long start = System.nanoTime();
-			int[] response = receive(inStream, outStream);
+			response = receive(inStream, outStream);
 			long delay = (System.nanoTime() - start);
 			System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
 			int result = makeDecision(response[1],response[0],response[2]);
@@ -86,21 +91,33 @@ public class AIPilot extends Thread{
 	 */
 	public int[] receive(InputStream inStream, OutputStream outStream) throws NumberFormatException, IOException {
 		int[] tab = new int[3];
+		outStream.write(98);
+		outStream.flush();
+		while(inStream.available()==0);
+		double accel = Double.parseDouble(Jsoup.parse(inStream.read()+"").text());
+		System.out.println("Acceleration : " );
+		outStream.write(99);
+		outStream.flush();
+		while(inStream.available()==0);
+		double angle = Double.parseDouble(Jsoup.parse(inStream.read()+"").text());
 		outStream.write(100);
 		outStream.flush();
 		while(inStream.available()==0);
 		int a = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 		tab[0] = a;
+		//add point
 		outStream.write(101);
 		outStream.flush();
 		while(inStream.available()==0);
 		int g = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 		tab[1] = g;
+		//add point
 		outStream.write(102);
 		outStream.flush();
 		while(inStream.available()==0);
 		int d = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 		tab[2] = d;
+		//add point
 		return tab;
 	}
 	/**

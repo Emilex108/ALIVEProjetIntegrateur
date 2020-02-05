@@ -21,6 +21,7 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import com.fazecast.jSerialComm.SerialPort;
 
 import ai.AIPilot;
+import utillities.Mapping2D;
 import utillities.TextAreaOutputStream;
 
 import javax.swing.border.LineBorder;
@@ -71,7 +72,7 @@ public class Application {
 				try {
 					Application window = new Application();
 					window.frame.setVisible(true);
-					SerialPort sp = SerialPort.getCommPort("com7");
+					SerialPort sp = SerialPort.getCommPort("com14");
 					sp.setComPortParameters(115200, 8, 1, 0);
 					sp.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
 
@@ -265,12 +266,17 @@ public class Application {
 					autoPilotOn = false;
 					btnAutopilotmode.setText("Activate Autopilot");
 					send(6);
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 					send(0);
 				}
 			}
 		});
 		panelBTN.add(btnAutopilotmode);
-
+		
 		JButton btnActivateAi = new JButton("Activate AI");
 
 		btnActivateAi.addActionListener(new ActionListener() {
@@ -287,11 +293,18 @@ public class Application {
 					aiOn = false;
 					ai.stop();
 					btnActivateAi.setText("Activate AI");
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 					send(0);
 				}
 			}
 		});
 		panelBTN.add(btnActivateAi);
+		
+		
 
 		JPanel panelConsole = new JPanel();
 		panelConsole.setBounds(0, 365, 532, 247);
