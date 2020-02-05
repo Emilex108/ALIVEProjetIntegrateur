@@ -26,6 +26,15 @@ public class AIPilot extends Thread{
 	private InputStream inStream;
 	private int[] response;
 	private Mapping2D map;
+	
+	private double angle;
+	private double accel;
+	private double vitesse;
+	private double posX = 0;
+	private double posY = 0;
+	
+	private final double BRAKE_ACCEL = -30.0;
+	private final double MAXSPEED = 0.4;
 
 	public AIPilot(OutputStream outStream, InputStream inStream, MultiLayerNetwork MLN) throws IOException {
 		this.MLN = MLN;
@@ -94,12 +103,12 @@ public class AIPilot extends Thread{
 		outStream.write(98);
 		outStream.flush();
 		while(inStream.available()==0);
-		double accel = Double.parseDouble(Jsoup.parse(inStream.read()+"").text());
+		accel = Double.parseDouble(Jsoup.parse(inStream.read()+"").text());
 		System.out.println("Acceleration : " );
 		outStream.write(99);
 		outStream.flush();
 		while(inStream.available()==0);
-		double angle = Double.parseDouble(Jsoup.parse(inStream.read()+"").text());
+		angle = Double.parseDouble(Jsoup.parse(inStream.read()+"").text());
 		outStream.write(100);
 		outStream.flush();
 		while(inStream.available()==0);
@@ -166,6 +175,21 @@ public class AIPilot extends Thread{
 			e.printStackTrace();
 		}
 
+	}
+	
+	public void trackPosition(long delay) {
+		if(accel<BRAKE_ACCEL) {
+			vitesse = 0;
+		}else {
+			vitesse = MAXSPEED;
+		}
+		double timeS = delay*Math.pow(10, -9);
+		double angleRad = Math.toRadians(angle);
+		double accelX = accel*Math.sin(angleRad);
+		double accelY = accel*Math.cos(angleRad);
+		
+		posX+=vitesse*timeS+0.5*accelX*Math.pow(timeS, 2);
+		posY+= vitesse*timeS+0.5*accelY*Math.pow(timeS, 2);
 	}
 
 }
