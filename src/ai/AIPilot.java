@@ -187,7 +187,7 @@ public class AIPilot extends Thread{
 		double angleRad = Math.toRadians(angle);
 		double accelX = accel*Math.sin(angleRad);
 		double accelY = accel*Math.cos(angleRad);
-		
+		//w
 		posX+=vitesse*timeS+0.5*accelX*Math.pow(timeS, 2);
 		posY+= vitesse*timeS+0.5*accelY*Math.pow(timeS, 2);
 	}
