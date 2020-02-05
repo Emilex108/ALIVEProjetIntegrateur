@@ -95,11 +95,12 @@ public class AIPilot extends Thread{
 		outStream.flush();
 		while(inStream.available()==0);
 		double accel = Double.parseDouble(Jsoup.parse(inStream.read()+"").text());
-		System.out.println("Acceleration : " );
+		System.out.println("Acceleration : " + accel);
 		outStream.write(99);
 		outStream.flush();
 		while(inStream.available()==0);
 		double angle = Double.parseDouble(Jsoup.parse(inStream.read()+"").text());
+		System.out.println("Angle : " + angle);
 		outStream.write(100);
 		outStream.flush();
 		while(inStream.available()==0);
