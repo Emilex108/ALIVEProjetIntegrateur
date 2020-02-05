@@ -74,7 +74,7 @@ public class Application {
 				try {
 					Application window = new Application();
 					window.frame.setVisible(true);
-					SerialPort sp = SerialPort.getCommPort("com14");
+					SerialPort sp = SerialPort.getCommPort("com8");
 					sp.setComPortParameters(115200, 8, 1, 0);
 					sp.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
 

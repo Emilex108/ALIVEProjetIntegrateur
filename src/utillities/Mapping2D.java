@@ -41,7 +41,6 @@ public class Mapping2D extends JFrame {
 			Graphics2D g2d = (Graphics2D) g;
 			for(Ellipse2D e : points) {
 				g2d.fill(e);
-				System.out.println(e.getCenterX()+" "+e.getCenterY());
 			}
 		}
 		
