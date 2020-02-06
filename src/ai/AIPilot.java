@@ -100,6 +100,16 @@ public class AIPilot extends Thread{
 		while(inStream.available()==0);
 		angle = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 		System.out.println("Angle : " + angle);
+		outStream.write(98);
+		outStream.flush();
+		while(inStream.available()==0);
+		accel = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
+		System.out.println("Accel : " + accel);
+		if(accel == 1) {
+			isRolling = true;
+		}else if(accel == 0) {
+			isRolling = false;
+		}
 		//add point
 		return tab;
 	}
