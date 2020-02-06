@@ -33,7 +33,8 @@ public class AIPilot extends Thread{
 	private double posX = 0;
 	private double posY = 0;
 	
-	private final double BRAKE_ACCEL = -30.0;
+	private boolean isRolling = false;
+	//with a speed of 110
 	private final double MAXSPEED = 0.4;
 
 	public AIPilot(OutputStream outStream, InputStream inStream, MultiLayerNetwork MLN) throws IOException {
@@ -153,19 +154,12 @@ public class AIPilot extends Thread{
 	}
 	
 	public void trackPosition(long delay) {
-		accel=0;
-		if(accel<BRAKE_ACCEL) {
-			vitesse = 0;
-		}else {
-			vitesse = MAXSPEED;
+		if(isRolling) {
+			double timeS = delay*Math.pow(10, -9);
+			double angleRad = Math.toRadians(angle);
+			posX+= (MAXSPEED*timeS)*Math.sin(angleRad)*100;
+			posY+= (MAXSPEED*timeS)*Math.cos(angleRad)*100;
+			System.out.println("PosX : " + posX + " PosY : "+ posY);
 		}
-		double timeS = delay*Math.pow(10, -9);
-		double angleRad = Math.toRadians(angle);
-		double accelX = accel*Math.sin(angleRad);
-		double accelY = accel*Math.cos(angleRad);
-		posX+= (vitesse*timeS+0.5*accelX*Math.pow(timeS, 2)/100)*100;
-		posY+= (vitesse*timeS+0.5*accelY*Math.pow(timeS, 2)/100)*20;
-		System.out.println("PosX : " + posX + " PosY : "+ posY);
 	}
-
 }
