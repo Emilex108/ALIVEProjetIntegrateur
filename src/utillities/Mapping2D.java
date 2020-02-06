@@ -16,7 +16,7 @@ public class Mapping2D extends JFrame {
 
 	private ArrayList<Ellipse2D.Double> points = new ArrayList<Ellipse2D.Double>();
 	
-	private boolean isRolling =false;
+	private boolean isRolling =true;
 	private double posX=0;
 	private double posY=0;
 	//with a speed of 110
@@ -37,7 +37,7 @@ public class Mapping2D extends JFrame {
 		repaint();
 	}
 	
-	public void trackPosition(long delay, String angle) {
+	public void trackPosition(String angle) {
 		if(isRolling) {
 			double timeS = delay*Math.pow(10, -9);
 			double angleDeg = readingAngle(angle);
@@ -74,7 +74,7 @@ public class Mapping2D extends JFrame {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Graphics2D g2d = (Graphics2D) g;
-			DisplayModel display = new DisplayModel(getWidth(), getHeight(), 1);	
+			DisplayModel display = new DisplayModel(getWidth(), getHeight(), 3);	
 			AffineTransform mat = display.getModel();
 			g2d.translate(this.getWidth()/2.0, this.getHeight()/2.0);
 			for(Ellipse2D e : points) {
