@@ -69,7 +69,6 @@ public class Application {
 	private static boolean autoPilotOn = false;
 	private static boolean aiOn = false;
 	private static MultiLayerNetwork MLN;
-	private static Mapping2D map;
 	private DetectionPanel detectionPanel = null;
 
 	/**
@@ -95,7 +94,6 @@ public class Application {
 					MLN = MultiLayerNetwork.load(new File("resources/AI.zip"), false);
 					outStream = sp.getOutputStream();
 					inStream = sp.getInputStream();
-					map = new Mapping2D();
 					System.out.println("Ready");
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -571,5 +569,8 @@ public class Application {
 	}
 	public static boolean getaiOn() {
 		return aiOn;
+	}
+	public static AIPilot getAi(){
+		return ai;
 	}
 }

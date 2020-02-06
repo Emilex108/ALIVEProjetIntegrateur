@@ -3,7 +3,6 @@ package utillities;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
@@ -11,6 +10,8 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
+
+import aapplication.Application;
 
 public class Mapping2D extends JFrame {
 
@@ -37,31 +38,15 @@ public class Mapping2D extends JFrame {
 		repaint();
 	}
 	
-	public void trackPosition(String angle) {
+	public void trackPosition(int angle) {
 		if(isRolling) {
-			double timeS = delay*Math.pow(10, -9);
-			double angleDeg = readingAngle(angle);
-			System.out.println("AngleDeg : "+angleDeg);
-			double angleRad = Math.toRadians(angleDeg);
+			double timeS = Application.getAi().getDelay()*Math.pow(10, -9);
+			double angleRad = Math.toRadians(angle);
 			double distance = MAXSPEED*timeS;
 			posX+= distance*Math.sin(angleRad);
 			posY+= distance*Math.cos(angleRad);
 			addPoint(posX, posY);
 		}
-	}
-	
-	public double readingAngle(String tangle) {
-		int stringLenght = tangle.length();
-		System.out.println("tangle: " +tangle);
-		String convertAngle = "";
-		if(tangle.length()%2 == 0) {
-		for(int i = 0; i<stringLenght; i+=2) {
-			convertAngle+= (Integer.parseInt(tangle.substring(i,i+2))-48)+"";
-			}
-		lastAngle = Double.parseDouble(convertAngle);
-		return Double.parseDouble(convertAngle);
-		}
-		return lastAngle;
 	}
 	
 	private class DrawPanel extends JPanel {
@@ -74,7 +59,7 @@ public class Mapping2D extends JFrame {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Graphics2D g2d = (Graphics2D) g;
-			DisplayModel display = new DisplayModel(getWidth(), getHeight(), 3);	
+			DisplayModel display = new DisplayModel(getWidth(), getHeight(), 10);	
 			AffineTransform mat = display.getModel();
 			g2d.translate(this.getWidth()/2.0, this.getHeight()/2.0);
 			for(Ellipse2D e : points) {

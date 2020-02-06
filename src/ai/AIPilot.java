@@ -10,6 +10,7 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
 import aapplication.Application;
+import utillities.Mapping2D;
 /**
  * This class is used to load the trained AI and feed it the data gathered from the car sensors. 
  * It's sole purpose is to analyze that data and give an answer according to it.
@@ -23,6 +24,9 @@ public class AIPilot extends Thread{
 	private OutputStream outStream;
 	private InputStream inStream;
 	private int[] response;
+	private long delay;
+	private int angle;
+	private Mapping2D map;
 
 
 
@@ -30,6 +34,7 @@ public class AIPilot extends Thread{
 		this.MLN = MLN;
 		this.outStream = outStream;
 		this.inStream = inStream;
+		map = new Mapping2D();
 	}
 
 	/**
@@ -71,19 +76,21 @@ public class AIPilot extends Thread{
 		while(inStream.available()==0);
 		int a = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 		tab[0] = a;
-		//add point
 		outStream.write(101);
 		outStream.flush();
 		while(inStream.available()==0);
 		int g = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 		tab[1] = g;
-		//add point
 		outStream.write(102);
 		outStream.flush();
 		while(inStream.available()==0);
 		int d = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 		tab[2] = d;
-		//add point
+		outStream.write(103);
+		outStream.flush();
+		while(inStream.available()==0);
+		angle = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
+		System.out.println("Angle : " + angle);
 		return tab;
 	}
 	/**
@@ -115,9 +122,8 @@ public class AIPilot extends Thread{
 			while(Application.getaiOn()) {
 				long start = System.nanoTime();
 				response = receive(inStream, outStream);
-				long delay = (System.nanoTime() - start);
-				//map.trackPosition(delay);
-				//.addPoint(posX, posY);
+				delay = (System.nanoTime() - start);
+				map.trackPosition(angle);
 				System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
 				int result = makeDecision(response[1],response[0],response[2]);
 				afficherResultat(result);
@@ -135,6 +141,11 @@ public class AIPilot extends Thread{
 		}
 
 	}
-	
+	public long getDelay() {
+		return delay;
+	}
+	public int getAngle() {
+		return angle;
+	}
 	
 }
