@@ -99,7 +99,6 @@ public class AIPilot extends Thread{
 		while(inStream.available()!=0) {
 			angle += Jsoup.parse(inStream.read()+"").text();
 		}
-		System.out.println("Angle : " + angle);
 		//add point
 		return tab;
 	}
@@ -134,7 +133,7 @@ public class AIPilot extends Thread{
 				int[] response = receive(inStream, outStream);
 				long delay = (System.nanoTime() - start);
 				trackPosition(delay);
-				map.addPoint(new Point((int)posX,(int)posY));
+				map.addPoint(posX, posY);
 				System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
 				int result = makeDecision(response[1],response[0],response[2]);
 				afficherResultat(result);
@@ -160,11 +159,12 @@ public class AIPilot extends Thread{
 	public void trackPosition(long delay) {
 		if(isRolling) {
 			double timeS = delay*Math.pow(10, -9);
-			System.out.println("DELAY : " + timeS);
-			double angleRad = Math.toRadians(readingAngle(angle));
-			posX+= (MAXSPEED*timeS)*Math.sin(angleRad);
-			posY+= (MAXSPEED*timeS)*Math.cos(angleRad);
-			System.out.println("PosX : " + posX + " PosY : "+ posY);
+			double angleDeg = readingAngle(angle);
+			System.out.println("AngleDeg : "+angleDeg);
+			double angleRad = Math.toRadians(angleDeg);
+			double distance = MAXSPEED*timeS;
+			posX+= distance*Math.sin(angleRad);
+			posY+= distance*Math.cos(angleRad);
 		}
 	}
 	
