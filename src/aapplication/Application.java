@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.jsoup.Jsoup;
 
 import com.fazecast.jSerialComm.SerialPort;
 
@@ -63,6 +64,8 @@ public class Application {
 	private static boolean autoPilotOn = false;
 	private static boolean aiOn = false;
 	private static MultiLayerNetwork MLN;
+	private static Mapping2D map;
+	private static String angle = "";
 
 	/**
 	 * Launch the application.
@@ -73,7 +76,7 @@ public class Application {
 				try {
 					Application window = new Application();
 					window.frame.setVisible(true);
-					SerialPort sp = SerialPort.getCommPort("com6");
+					SerialPort sp = SerialPort.getCommPort("com8");
 					sp.setComPortParameters(115200, 8, 1, 0);
 					sp.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
 
@@ -87,6 +90,7 @@ public class Application {
 					MLN = MultiLayerNetwork.load(new File("resources/AI.zip"), false);
 					outStream = sp.getOutputStream();
 					inStream = sp.getInputStream();
+					map = new Mapping2D();
 					System.out.println("Ready");
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -137,6 +141,7 @@ public class Application {
 			public void mousePressed(MouseEvent e) {
 				associateImageWithButton(btnUp, "Up.png",0);
 				send(3);
+				
 			}public void mouseReleased(MouseEvent e) {
 				associateImageWithButton(btnUp, "Up2.png",0);
 				send(0);
@@ -219,7 +224,7 @@ public class Application {
 		associateImageWithButton(btnRight, "Up.png",1);
 		associateImageWithButton(btnDown, "Up.png",2);
 		associateImageWithButton(btnLeft, "Up.png",3);
-
+		
 		JCheckBox chckbxModeClavier = new JCheckBox("Keyboard control mode");
 		chckbxModeClavier.setSelected(false);
 		chckbxModeClavier.addFocusListener(new FocusAdapter() {
@@ -234,18 +239,48 @@ public class Application {
 				int c = e.getKeyCode ();
 				if (c==KeyEvent.VK_UP) {
 					send(1);
+					try {
+						while(inStream.available()==0);
+						while(inStream.available()!=0) {
+							angle += Jsoup.parse(inStream.read()+"").text();
+						}
+						if(!(angle.length()>6)) {
+							map.trackPosition(angle);
+						}
+						angle = "";
+					} catch (IOException e1) {}
 				} else if (c==KeyEvent.VK_RIGHT) { 
 					send(2);
+					try {
+						while(inStream.available()==0);
+						while(inStream.available()!=0) {
+							angle += Jsoup.parse(inStream.read()+"").text();
+						}
+						if(!(angle.length()>6)) {
+							map.trackPosition(angle);
+						}
+						angle = "";
+					} catch (IOException e1) {}
 				} else if (c==KeyEvent.VK_DOWN) { 
 					send(3);
 				} else if (c==KeyEvent.VK_LEFT) { 
 					send(4);
+					try {
+						while(inStream.available()==0);
+						while(inStream.available()!=0) {
+							angle += Jsoup.parse(inStream.read()+"").text();
+						}
+						if(!(angle.length()>6)) {
+							map.trackPosition(angle);
+						}
+						angle = "";
+					} catch (IOException e1) {}
 				}
 			}
 			@Override
 			public void keyReleased(KeyEvent e) {
 				send(0);
-
+				angle = "";
 			}
 		});
 		chckbxModeClavier.setBounds(6, 280, 321, 23);
