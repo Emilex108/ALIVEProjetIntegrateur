@@ -28,12 +28,9 @@ public class AIPilot extends Thread{
 	private Mapping2D map;
 	
 	private String angle = "";
-	private double posX = 0;
-	private double posY = 0;
 	
 	private boolean isRolling = false;
-	//with a speed of 110
-	private final double MAXSPEED = 0.4;
+
 
 	public AIPilot(OutputStream outStream, InputStream inStream, MultiLayerNetwork MLN) throws IOException {
 		this.MLN = MLN;
@@ -132,8 +129,8 @@ public class AIPilot extends Thread{
 				long start = System.nanoTime();
 				int[] response = receive(inStream, outStream);
 				long delay = (System.nanoTime() - start);
-				trackPosition(delay);
-				map.addPoint(posX, posY);
+				//map.trackPosition(delay);
+				//.addPoint(posX, posY);
 				System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
 				int result = makeDecision(response[1],response[0],response[2]);
 				afficherResultat(result);
@@ -156,28 +153,5 @@ public class AIPilot extends Thread{
 
 	}
 	
-	public void trackPosition(long delay) {
-		if(isRolling) {
-			double timeS = delay*Math.pow(10, -9);
-			double angleDeg = readingAngle(angle);
-			System.out.println("AngleDeg : "+angleDeg);
-			double angleRad = Math.toRadians(angleDeg);
-			double distance = MAXSPEED*timeS;
-			posX+= distance*Math.sin(angleRad);
-			posY+= distance*Math.cos(angleRad);
-		}
-	}
-	
-	public double readingAngle(String tangle) {
-		int stringLenght = tangle.length();
-		String convertAngle = "";
-		if(tangle.length()%2 == 0) {
-		for(int i = 0; i<stringLenght; i+=2) {
-			convertAngle= (Integer.parseInt(tangle.substring(i,i+2))-48)+"";
-			}
-		return Double.parseDouble(convertAngle)%360;
-		}
-		return 0;
-	}
 	
 }

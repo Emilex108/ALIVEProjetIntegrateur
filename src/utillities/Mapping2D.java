@@ -16,6 +16,13 @@ public class Mapping2D extends JFrame {
 
 	private ArrayList<Ellipse2D.Double> points = new ArrayList<Ellipse2D.Double>();
 	
+	private boolean isRolling =false;
+	private double posX=0;
+	private double posY=0;
+	//with a speed of 110
+	private final double MAXSPEED = 0.4;
+	private double lastAngle=0;
+	
 	public Mapping2D() {
 		this.add(new DrawPanel());
 		this.setPreferredSize(new Dimension(500,500));
@@ -30,6 +37,33 @@ public class Mapping2D extends JFrame {
 		repaint();
 	}
 	
+	public void trackPosition(long delay, String angle) {
+		if(isRolling) {
+			double timeS = delay*Math.pow(10, -9);
+			double angleDeg = readingAngle(angle);
+			System.out.println("AngleDeg : "+angleDeg);
+			double angleRad = Math.toRadians(angleDeg);
+			double distance = MAXSPEED*timeS;
+			posX+= distance*Math.sin(angleRad);
+			posY+= distance*Math.cos(angleRad);
+			addPoint(posX, posY);
+		}
+	}
+	
+	public double readingAngle(String tangle) {
+		int stringLenght = tangle.length();
+		System.out.println("tangle: " +tangle);
+		String convertAngle = "";
+		if(tangle.length()%2 == 0) {
+		for(int i = 0; i<stringLenght; i+=2) {
+			convertAngle+= (Integer.parseInt(tangle.substring(i,i+2))-48)+"";
+			}
+		lastAngle = Double.parseDouble(convertAngle);
+		return Double.parseDouble(convertAngle);
+		}
+		return lastAngle;
+	}
+	
 	private class DrawPanel extends JPanel {
 		
 		protected DrawPanel() {
@@ -40,7 +74,7 @@ public class Mapping2D extends JFrame {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Graphics2D g2d = (Graphics2D) g;
-			DisplayModel display = new DisplayModel(getWidth(), getHeight(), 4.0);	
+			DisplayModel display = new DisplayModel(getWidth(), getHeight(), 1);	
 			AffineTransform mat = display.getModel();
 			g2d.translate(this.getWidth()/2.0, this.getHeight()/2.0);
 			for(Ellipse2D e : points) {
