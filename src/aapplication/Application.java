@@ -68,12 +68,8 @@ public class Application {
 	private static boolean autoPilotOn = false;
 	private static boolean aiOn = false;
 	private static MultiLayerNetwork MLN;
-
-	private DetectionPanel detectionPanel = null;
-
 	private static Mapping2D map;
-	private static String angle = "";
-
+	private DetectionPanel detectionPanel = null;
 
 	/**
 	 * Launch the application.
@@ -247,48 +243,17 @@ public class Application {
 				int c = e.getKeyCode ();
 				if (c==KeyEvent.VK_UP) {
 					send(1);
-					try {
-						while(inStream.available()==0);
-						while(inStream.available()!=0) {
-							angle += Jsoup.parse(inStream.read()+"").text();
-						}
-						if(!(angle.length()>6)) {
-							map.trackPosition(angle);
-						}
-						angle = "";
-					} catch (IOException e1) {}
 				} else if (c==KeyEvent.VK_RIGHT) { 
 					send(2);
-					try {
-						while(inStream.available()==0);
-						while(inStream.available()!=0) {
-							angle += Jsoup.parse(inStream.read()+"").text();
-						}
-						if(!(angle.length()>6)) {
-							map.trackPosition(angle);
-						}
-						angle = "";
-					} catch (IOException e1) {}
 				} else if (c==KeyEvent.VK_DOWN) { 
 					send(3);
 				} else if (c==KeyEvent.VK_LEFT) { 
 					send(4);
-					try {
-						while(inStream.available()==0);
-						while(inStream.available()!=0) {
-							angle += Jsoup.parse(inStream.read()+"").text();
-						}
-						if(!(angle.length()>6)) {
-							map.trackPosition(angle);
-						}
-						angle = "";
-					} catch (IOException e1) {}
 				}
 			}
 			@Override
 			public void keyReleased(KeyEvent e) {
 				send(0);
-				angle = "";
 			}
 		});
 		chckbxModeClavier.setBounds(6, 280, 321, 23);
