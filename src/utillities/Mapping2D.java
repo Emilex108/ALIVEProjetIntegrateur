@@ -26,7 +26,7 @@ public class Mapping2D extends JFrame {
 	}
 	
 	public void addPoint(Point point) {
-		points.add(new Ellipse2D.Double(point.x, point.y, 5,5));
+		points.add(new Ellipse2D.Double(point.x, point.y, 0.005,0.005));
 		repaint();
 	}
 	
