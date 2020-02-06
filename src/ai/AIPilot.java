@@ -172,4 +172,14 @@ public class AIPilot extends Thread{
 			System.out.println("PosX : " + posX + " PosY : "+ posY);
 		}
 	}
+	
+	public double readingAngle(String tangle) {
+		int stringLenght = tangle.length();
+		String convertAngle = "";
+		for(int i = 0; i<stringLenght/2; i++) {
+			convertAngle= (Integer.parseInt(tangle.substring(i,2))-48)+"";
+		}
+		return Double.parseDouble(convertAngle)%360;
+	}
+	
 }
