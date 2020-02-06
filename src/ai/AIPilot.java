@@ -27,7 +27,7 @@ public class AIPilot extends Thread{
 	private int[] response;
 	private Mapping2D map;
 	
-	private double angle;
+	private String angle = "";
 	private double posX = 0;
 	private double posY = 0;
 	
@@ -76,7 +76,6 @@ public class AIPilot extends Thread{
 	 */
 	public int[] receive(InputStream inStream, OutputStream outStream) throws NumberFormatException, IOException {
 		int[] tab = new int[3];
-		String tangle = "";
 		outStream.write(100);
 		outStream.flush();
 		while(inStream.available()==0);
@@ -97,17 +96,11 @@ public class AIPilot extends Thread{
 		outStream.write(99);
 		outStream.flush();
 		while(inStream.available()==0);
-		angle = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
+		while(inStream.available()!=0) {
+			angle += Jsoup.parse(inStream.read()+"").text();
+		}
 		System.out.println("Angle : " + angle);
 		//add point
-		outStream.write(12);
-		outStream.flush();
-		while(inStream.available()==0);
-		while(inStream.available()!=0) {
-			tangle += Jsoup.parse(inStream.read()+"").text();
-		}
-		System.out.println("TEST1 : " + tangle);
-		
 		return tab;
 	}
 	/**
@@ -166,7 +159,7 @@ public class AIPilot extends Thread{
 	public void trackPosition(long delay) {
 		if(isRolling) {
 			double timeS = delay*Math.pow(10, -9);
-			double angleRad = Math.toRadians(angle);
+			double angleRad = Math.toRadians(readingAngle(angle));
 			posX+= (MAXSPEED*timeS)*Math.sin(angleRad)*5;
 			posY+= (MAXSPEED*timeS)*Math.cos(angleRad)*5;
 			System.out.println("PosX : " + posX + " PosY : "+ posY);
