@@ -26,8 +26,7 @@ public class DetectionPanel extends JPanel {
 	
 	public DetectionPanel() throws IOException {
 		width = 100;
-		gvA = new GraphicVector();
-		gvA.setOrigineXY(100, 100);
+		gvA = new GraphicVector(50, 50);
 		gvG = new GraphicVector();
 		gvA.setOrigineXY(100, 100);
 		gvD = new GraphicVector();
@@ -43,12 +42,13 @@ public class DetectionPanel extends JPanel {
 		System.out.println(imgRead.getWidth(null));
 		g2d.drawImage(imgRead,getWidth()/2 - imgRead.getWidth(null)/2,150,(int) width,(int)(width * 1.3),null);
 		gvA.dessiner(g2d);
-		gvG.dessiner(g2d);
-		gvD.dessiner(g2d);
+		//gvG.dessiner(g2d);
+		//gvD.dessiner(g2d);
 	}
 
 	public void setDistanceG(int G) {
 		distanceG = G;
+		gvA.setLength(G);
 		repaint();
 	}
 

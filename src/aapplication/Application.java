@@ -21,6 +21,7 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import com.fazecast.jSerialComm.SerialPort;
 
 import ai.AIPilot;
+import utillities.DetectionPanel;
 import utillities.Mapping2D;
 import utillities.TextAreaOutputStream;
 
@@ -45,6 +46,9 @@ import java.awt.event.FocusEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.BorderLayout;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 /**
  * This is the main application of the ALIVE project, it manages the different threads and allows the user to interact with the car.
  * @author Émile Gagné & Guillaume Blain
@@ -63,6 +67,7 @@ public class Application {
 	private static boolean autoPilotOn = false;
 	private static boolean aiOn = false;
 	private static MultiLayerNetwork MLN;
+	private DetectionPanel detectionPanel = null;
 
 	/**
 	 * Launch the application.
@@ -408,7 +413,6 @@ public class Application {
 		frame.getContentPane().add(detection_panel);
 		detection_panel.setLayout(new BorderLayout(0, 0));
 		
-		/*DetectionPanel detectionPanel = null;
 		try {
 			detectionPanel = new DetectionPanel();
 		} catch (IOException e1) {
@@ -416,7 +420,17 @@ public class Application {
 			e1.printStackTrace();
 		}
 		detection_panel.add(detectionPanel);
-		detectionPanel.repaint();*/
+		
+		JSlider slider = new JSlider();
+		slider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				detectionPanel.setDistanceG(slider.getValue());
+			}
+		});
+		slider.setBounds(397, 321, 200, 26);
+		frame.getContentPane().add(slider);
+		detectionPanel.repaint();
+		
 	}
 	public void associateImageWithButton(JButton mainButton, String imageFile, int nbRotation) {
 		Image imgRead = null;

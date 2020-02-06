@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 
 public class GraphicVector extends Vector implements Drawable {
 	
@@ -25,8 +26,15 @@ public class GraphicVector extends Vector implements Drawable {
 	public GraphicVector (double origX, double origY) {
 		this.origX = origX;
 		this.origY = origY;
+		length = 100;
+		angle = -45;
 	}
-	
+	public GraphicVector (double origX, double origY, double length, double angle) {
+		this.origX = origX;
+		this.origY = origY;
+		this.length = length;
+		this.angle = angle;
+	}
 	private void creerLabel(Graphics2D g2d) {
 		System.out.println(label + " " + x + "/" + y);
 		g2d.translate(origX + x *(1 + LABEL_DEPLACEMENT), origY + y * (1 + LABEL_DEPLACEMENT));
@@ -39,13 +47,16 @@ public class GraphicVector extends Vector implements Drawable {
 	 */
 	@Override
 	public void dessiner(Graphics2D g2d) {	
+		traitDeTete = new Line2D.Double(length -10,0,length, 0);
 		AffineTransform mat = g2d.getTransform();
 		g2d.translate(origX, origY);
-		
-		//g2d.draw(  );  										//ligne formant le vecteur lui-meme
-		g2d.rotate(angleTete/2, x,  y);
+		System.out.println("origX = "+origX + "\norigY = "+origY );
+		Line2D.Double body = new Line2D.Double(0,0,length, 0);
+		g2d.rotate(Math.toRadians(angle));
+		g2d.draw(body);  										//ligne formant le vecteur lui-meme
+		g2d.rotate(angleTete/2, length, 0);
 		g2d.draw(traitDeTete); 										//un des deux traits qui forment la tete du vecteur
-		g2d.rotate(-angleTete, x, y);
+		g2d.rotate(-angleTete, length, 0);
 		g2d.draw(traitDeTete);
 		g2d.setTransform(mat);
 		
