@@ -167,8 +167,8 @@ public class AIPilot extends Thread{
 		if(isRolling) {
 			double timeS = delay*Math.pow(10, -9);
 			double angleRad = Math.toRadians(angle);
-			posX+= (MAXSPEED*timeS)*Math.sin(angleRad)*100;
-			posY+= (MAXSPEED*timeS)*Math.cos(angleRad)*100;
+			posX+= (MAXSPEED*timeS)*Math.sin(angleRad);
+			posY+= (MAXSPEED*timeS)*Math.cos(angleRad);
 			System.out.println("PosX : " + posX + " PosY : "+ posY);
 		}
 	}
