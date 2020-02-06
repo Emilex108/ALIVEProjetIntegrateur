@@ -50,6 +50,7 @@ import java.awt.BorderLayout;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import java.awt.GridLayout;
 /**
  * This is the main application of the ALIVE project, it manages the different threads and allows the user to interact with the car.
  * @author Émile Gagné & Guillaume Blain
@@ -366,24 +367,6 @@ public class Application {
 		frame.getContentPane().add(panel_Output);
 		panel_Output.setLayout(null);
 
-		tfLeft = new JTextField();
-		tfLeft.setEditable(false);
-		tfLeft.setBounds(66, 54, 86, 20);
-		panel_Output.add(tfLeft);
-		tfLeft.setColumns(10);
-
-		tfMiddle = new JTextField();
-		tfMiddle.setEditable(false);
-		tfMiddle.setBounds(66, 85, 86, 20);
-		panel_Output.add(tfMiddle);
-		tfMiddle.setColumns(10);
-
-		tfRight = new JTextField();
-		tfRight.setEditable(false);
-		tfRight.setBounds(66, 116, 86, 20);
-		panel_Output.add(tfRight);
-		tfRight.setColumns(10);
-
 		JLabel lblLeft = new JLabel("Left :");
 		lblLeft.setBounds(8, 57, 59, 14);
 		panel_Output.add(lblLeft);
@@ -414,24 +397,63 @@ public class Application {
 		detection_panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Detection", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		detection_panel.setBounds(346, 0, 380, 310);
 		frame.getContentPane().add(detection_panel);
-		detection_panel.setLayout(new BorderLayout(0, 0));
 		
 		try {
 			detectionPanel = new DetectionPanel();
+			detectionPanel.setBounds(5, 47, 370, 258);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		detection_panel.setLayout(null);
 		detection_panel.add(detectionPanel);
 		
+				tfLeft = new JTextField();
+				tfLeft.setBounds(30, 16, 86, 20);
+				detection_panel.add(tfLeft);
+				tfLeft.setEditable(false);
+				tfLeft.setColumns(10);
+				
+						tfMiddle = new JTextField();
+						tfMiddle.setBounds(146, 16, 86, 20);
+						detection_panel.add(tfMiddle);
+						tfMiddle.setEditable(false);
+						tfMiddle.setColumns(10);
+						
+								tfRight = new JTextField();
+								tfRight.setBounds(262, 16, 86, 20);
+								detection_panel.add(tfRight);
+								tfRight.setEditable(false);
+								tfRight.setColumns(10);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(363, 321, 390, 33);
+		frame.getContentPane().add(panel);
+		panel.setLayout(new GridLayout(0, 3, 0, 0));
+		
 		JSlider slider = new JSlider();
-		slider.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent arg0) {
-				detectionPanel.setDistanceG(slider.getValue());
+		panel.add(slider);
+		
+		JSlider slider_1 = new JSlider();
+		slider_1.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				detectionPanel.setDistanceA((int) (slider_1.getValue() * 1.25));
 			}
 		});
-		slider.setBounds(397, 321, 200, 26);
-		frame.getContentPane().add(slider);
+		panel.add(slider_1);
+		
+		JSlider slider_2 = new JSlider();
+		slider_2.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				detectionPanel.setDistanceD((int) (slider_2.getValue() * 1.25));
+			}
+		});
+		panel.add(slider_2);
+		slider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				detectionPanel.setDistanceG((int) (slider.getValue() * 1.25));
+			}
+		});
 		detectionPanel.repaint();
 		
 	}

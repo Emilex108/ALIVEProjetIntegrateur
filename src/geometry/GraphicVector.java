@@ -27,7 +27,13 @@ public class GraphicVector extends Vector implements Drawable {
 		this.origX = origX;
 		this.origY = origY;
 		length = 100;
-		angle = -45;
+		angle = 0;
+	}
+	public GraphicVector (double origX, double origY, double angle) {
+		this.origX = origX;
+		this.origY = origY;
+		this.length = 50;
+		this.angle = angle;
 	}
 	public GraphicVector (double origX, double origY, double length, double angle) {
 		this.origX = origX;
