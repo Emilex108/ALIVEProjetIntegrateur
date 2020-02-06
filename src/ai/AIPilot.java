@@ -149,6 +149,7 @@ public class AIPilot extends Thread{
 					isRolling = true;
 				}
 				outStream.flush();
+				angle = "";
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -169,10 +170,13 @@ public class AIPilot extends Thread{
 	public double readingAngle(String tangle) {
 		int stringLenght = tangle.length();
 		String convertAngle = "";
-		for(int i = 0; i<stringLenght/2; i++) {
-			convertAngle= (Integer.parseInt(tangle.substring(i,2))-48)+"";
-		}
+		if(tangle.length()%2 == 0) {
+		for(int i = 0; i<stringLenght; i+=2) {
+			convertAngle= (Integer.parseInt(tangle.substring(i,i+2))-48)+"";
+			}
 		return Double.parseDouble(convertAngle)%360;
+		}
+		return 0;
 	}
 	
 }
