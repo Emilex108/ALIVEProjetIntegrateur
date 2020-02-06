@@ -28,8 +28,6 @@ public class AIPilot extends Thread{
 	private Mapping2D map;
 	
 	private double angle;
-	private double accel;
-	private double vitesse;
 	private double posX = 0;
 	private double posY = 0;
 	
@@ -78,6 +76,7 @@ public class AIPilot extends Thread{
 	 */
 	public int[] receive(InputStream inStream, OutputStream outStream) throws NumberFormatException, IOException {
 		int[] tab = new int[3];
+		String tangle = "";
 		outStream.write(100);
 		outStream.flush();
 		while(inStream.available()==0);
@@ -100,17 +99,15 @@ public class AIPilot extends Thread{
 		while(inStream.available()==0);
 		angle = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 		System.out.println("Angle : " + angle);
-		outStream.write(98);
+		//add point
+		outStream.write(12);
 		outStream.flush();
 		while(inStream.available()==0);
-		accel = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
-		System.out.println("Accel : " + accel);
-		if(accel == 1) {
-			isRolling = true;
-		}else if(accel == 0) {
-			isRolling = false;
+		while(inStream.available()!=0) {
+			tangle += Jsoup.parse(inStream.read()+"").text();
 		}
-		//add point
+		System.out.println("TEST1 : " + tangle);
+		
 		return tab;
 	}
 	/**
@@ -150,10 +147,13 @@ public class AIPilot extends Thread{
 				afficherResultat(result);
 				if(result == 2) {
 					outStream.write(2);
+					isRolling = false;
 				}else if(result == 1) {
 					outStream.write(4);
+					isRolling = false;
 				}else {
 					outStream.write(1);
+					isRolling = true;
 				}
 				outStream.flush();
 			}
