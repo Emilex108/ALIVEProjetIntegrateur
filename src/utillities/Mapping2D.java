@@ -26,7 +26,7 @@ public class Mapping2D extends JFrame {
 	}
 	
 	public void addPoint(Point point) {
-		points.add(new Ellipse2D.Double(point.x, point.y, 0.005,0.005));
+		points.add(new Ellipse2D.Double(point.x, point.y, 0.05,0.05));
 		repaint();
 	}
 	
@@ -40,7 +40,7 @@ public class Mapping2D extends JFrame {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Graphics2D g2d = (Graphics2D) g;
-			DisplayModel display = new DisplayModel(getWidth(), getHeight(), 3);	
+			DisplayModel display = new DisplayModel(getWidth(), getHeight(), 1);	
 			AffineTransform mat = display.getModel();
 			g2d.translate(this.getWidth()/2, this.getHeight()/2);
 			for(Ellipse2D e : points) {
