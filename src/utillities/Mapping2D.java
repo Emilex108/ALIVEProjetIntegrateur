@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 
@@ -39,9 +40,11 @@ public class Mapping2D extends JFrame {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Graphics2D g2d = (Graphics2D) g;
+			DisplayModel display = new DisplayModel(getWidth(), getHeight(), 3);	
+			AffineTransform mat = display.getModel();
 			g2d.translate(this.getWidth()/2, this.getHeight()/2);
 			for(Ellipse2D e : points) {
-				g2d.fill(e);
+				g2d.fill(mat.createTransformedShape(e));
 			}
 		}
 		
