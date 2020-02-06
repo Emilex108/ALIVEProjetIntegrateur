@@ -160,6 +160,7 @@ public class AIPilot extends Thread{
 	public void trackPosition(long delay) {
 		if(isRolling) {
 			double timeS = delay*Math.pow(10, -9);
+			System.out.println("DELAY : " + timeS);
 			double angleRad = Math.toRadians(readingAngle(angle));
 			posX+= (MAXSPEED*timeS)*Math.sin(angleRad);
 			posY+= (MAXSPEED*timeS)*Math.cos(angleRad);
