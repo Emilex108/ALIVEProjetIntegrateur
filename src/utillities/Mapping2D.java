@@ -54,14 +54,26 @@ public class Mapping2D extends JFrame {
 		}
 	}
 	
-	public void wallDetection(int distanceLeft, int ditanceCenter, int distanceRight, int angle) {
-		double posX;
-		double posY;
+	public void wallDetection(int distanceLeft, int distanceCenter, int distanceRight, int angle) {
+		double posXWall;
+		double posYWall;
 		double angleRad = Math.toRadians(angle);
 		if(distanceLeft<ABBERATE_DISTANCE) {
-			posX = distanceLeft/100*Math.sin(angleRad);
-			posY = distanceLeft/100*Math.cos(angleRad);
+			posXWall = distanceLeft/100*Math.sin(angleRad);
+			posYWall = distanceLeft/100*Math.cos(angleRad);
+			addPoint(posXWall, posYWall);
 		}
+		if(distanceCenter<ABBERATE_DISTANCE) {
+			posXWall = distanceLeft/100*Math.sin(angleRad);
+			posYWall = distanceLeft/100*Math.cos(angleRad);
+			addPoint(posXWall, posYWall);
+		}
+		if(distanceRight<ABBERATE_DISTANCE) {
+			posXWall = distanceLeft/100*Math.sin(angleRad);
+			posYWall = distanceLeft/100*Math.cos(angleRad);
+			addPoint(posXWall, posYWall);
+		}
+		
 	}
 	
 	private class DrawPanel extends JPanel {
