@@ -16,6 +16,8 @@ import aapplication.Application;
 
 public class Mapping2D extends JFrame {
 
+	private static final long serialVersionUID = -4652705085854314829L;
+
 	private ArrayList<Ellipse2D.Double> points = new ArrayList<Ellipse2D.Double>();
 	
 	private boolean isRolling =true;
@@ -77,6 +79,11 @@ public class Mapping2D extends JFrame {
 	
 	private class DrawPanel extends JPanel {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 6353638320113149132L;
+
 		protected DrawPanel() {
 			this.setPreferredSize(new Dimension(500,500));
 			this.setSize(new Dimension(500,500));

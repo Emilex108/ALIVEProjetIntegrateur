@@ -17,13 +17,11 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
-import org.jsoup.Jsoup;
-
 import com.fazecast.jSerialComm.SerialPort;
 
 import ai.AIPilot;
 import utillities.DetectionPanel;
-import utillities.Mapping2D;
+import utillities.Test;
 import utillities.TextAreaOutputStream;
 
 import javax.swing.border.LineBorder;
@@ -46,7 +44,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
-import java.awt.BorderLayout;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
@@ -78,6 +75,7 @@ public class Application {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					Test.getImage();
 					Application window = new Application();
 					window.frame.setVisible(true);
 					SerialPort sp = SerialPort.getCommPort("com8");

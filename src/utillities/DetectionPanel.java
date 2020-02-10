@@ -3,7 +3,6 @@ package utillities;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -15,6 +14,7 @@ import geometry.GraphicVector;
 
 public class DetectionPanel extends JPanel {
 
+	private static final long serialVersionUID = -4057020340831196682L;
 	private Image imgRead;
 	private double width;
 	GraphicVector gvA;
