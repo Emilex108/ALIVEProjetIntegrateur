@@ -3,6 +3,7 @@ package ai;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.jsoup.Jsoup;
@@ -10,6 +11,7 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
 import aapplication.Application;
+import listeners.DistanceChangedListener;
 import utillities.Mapping2D;
 /**
  * This class is used to load the trained AI and feed it the data gathered from the car sensors. 
@@ -27,6 +29,7 @@ public class AIPilot extends Thread{
 	private long delay;
 	private int angle;
 	private Mapping2D map;
+	private ArrayList<DistanceChangedListener> listenerList = new ArrayList<DistanceChangedListener>();
 
 
 
@@ -90,7 +93,6 @@ public class AIPilot extends Thread{
 		outStream.flush();
 		while(inStream.available()==0);
 		angle = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
-		System.out.println("Angle : " + angle);
 		return tab;
 	}
 	/**
@@ -123,6 +125,7 @@ public class AIPilot extends Thread{
 				long start = System.nanoTime();
 				response = receive(inStream, outStream);
 				delay = (System.nanoTime() - start);
+				distanceChanged();
 				map.trackPosition(angle);
 				System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
 				int result = makeDecision(response[1],response[0],response[2]);
@@ -147,5 +150,12 @@ public class AIPilot extends Thread{
 	public int getAngle() {
 		return angle;
 	}
-	
+	public void addDistanceChangedListener(DistanceChangedListener listener) {
+        listenerList.add(listener);
+    }
+    public void distanceChanged() {
+        for(DistanceChangedListener listener : listenerList) {
+            listener.distanceChanged(response[1], response[0], response[2]);
+        }
+    }
 }
