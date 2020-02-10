@@ -75,7 +75,7 @@ public class Application {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Test.getImage();
+					//Test.getImage();
 					Application window = new Application();
 					window.frame.setVisible(true);
 					SerialPort sp = SerialPort.getCommPort("com8");
