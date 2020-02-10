@@ -27,7 +27,7 @@ public class AIPilot extends Thread{
 	private InputStream inStream;
 	private int[] response;
 	private long delay;
-	private int angle;
+	private int angle,anglePositive,nbDemiTours;
 	private Mapping2D map;
 	private ArrayList<DistanceChangedListener> listenerList = new ArrayList<DistanceChangedListener>();
 
@@ -92,7 +92,18 @@ public class AIPilot extends Thread{
 		outStream.write(103);
 		outStream.flush();
 		while(inStream.available()==0);
+		anglePositive = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
+		System.out.println("Angle signe : " + anglePositive);
+		outStream.write(104);
+		outStream.flush();
+		while(inStream.available()==0);
 		angle = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
+		System.out.println("Angle : " + angle);
+		outStream.write(105);
+		outStream.flush();
+		while(inStream.available()==0);
+		nbDemiTours = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
+		System.out.println("Demi Tours : " + nbDemiTours);
 		return tab;
 	}
 	/**
