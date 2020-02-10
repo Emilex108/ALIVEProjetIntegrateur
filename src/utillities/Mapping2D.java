@@ -23,10 +23,13 @@ public class Mapping2D extends JFrame {
 	private boolean isRolling =true;
 	private double posX=0;
 	private double posY=0;
+	
 	//with a speed of 110
 	private final double MAXSPEED = 0.4;
+	
 	private final double CAR_WIDTH = 0.20;
-	private final int ABBERATE_DISTANCE = 200;
+	private final int ABBERATE_DISTANCE = 8;
+	private final double OBSTACLES_WIDTH = 0.10;
 	
 	private Ellipse2D car;
 	
@@ -40,7 +43,7 @@ public class Mapping2D extends JFrame {
 	}
 	
 	public void addPoint(double posX, double posY) {
-		points.add(new Ellipse2D.Double(posX, posY, 0.05,0.05));
+		points.add(new Ellipse2D.Double(posX, posY, OBSTACLES_WIDTH,OBSTACLES_WIDTH));
 		repaint();
 	}
 	
@@ -60,18 +63,18 @@ public class Mapping2D extends JFrame {
 		double posYWall;
 		double angleRad = Math.toRadians(angle);
 		if(distanceLeft<ABBERATE_DISTANCE) {
-			posXWall = distanceLeft/100*Math.sin(angleRad);
-			posYWall = distanceLeft/100*Math.cos(angleRad);
+			posXWall = posX+distanceLeft/100*Math.sin(angleRad);
+			posYWall = posY+distanceLeft/100*Math.cos(angleRad);
 			addPoint(posXWall, posYWall);
 		}
 		if(distanceCenter<ABBERATE_DISTANCE) {
-			posXWall = distanceLeft/100*Math.sin(angleRad);
-			posYWall = distanceLeft/100*Math.cos(angleRad);
+			posXWall = posX+distanceLeft/100*Math.sin(angleRad);
+			posYWall = posY+distanceLeft/100*Math.cos(angleRad);
 			addPoint(posXWall, posYWall);
 		}
 		if(distanceRight<ABBERATE_DISTANCE) {
-			posXWall = distanceLeft/100*Math.sin(angleRad);
-			posYWall = distanceLeft/100*Math.cos(angleRad);
+			posXWall = posX+distanceLeft/100*Math.sin(angleRad);
+			posYWall = posY+distanceLeft/100*Math.cos(angleRad);
 			addPoint(posXWall, posYWall);
 		}
 		

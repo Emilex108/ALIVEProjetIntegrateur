@@ -1,7 +1,12 @@
+
 package geometry;
 
 import java.awt.Color;
-
+/**
+ * This enum contains all the types of obect the AI can detect with their names and color of box
+ * @author Olivier St-Pierre
+ *
+ */
 public enum BoxType {
 	TRAFFIC_lIGHT(Color.red, "Traffic light"),
 	CAR(Color.blue, "Car"), 

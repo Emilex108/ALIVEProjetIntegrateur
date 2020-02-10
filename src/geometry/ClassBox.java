@@ -5,7 +5,11 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
-
+/**
+ * This class defines a box draw around a detected object. 
+ * @author Olivier St-Pierre
+ *
+ */
 public class ClassBox implements Drawable{
 	
 	private Rectangle2D rectangle;

@@ -1,6 +1,8 @@
 package aapplication;
-import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -10,11 +12,11 @@ import geometry.BoxType;
 import geometry.ClassBox;
 import videoFeed.BoxFeed;
 import videoFeed.CapteurFeed;
-import videoFeed.VideoFeed;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
+/**
+ * This class contains a frame with all the different types of videoFeed we use
+ * @author Olivier St-Pierre
+ *
+ */
 public class CameraTab {
 
 	private JFrame frame;
