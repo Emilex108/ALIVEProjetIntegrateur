@@ -26,7 +26,7 @@ public class AIPilot extends Thread{
 	private OutputStream outStream;
 	private InputStream inStream;
 	private int[] response;
-	private long delay;
+	private long delay, start;
 	private int angle,anglePositive,nbDemiTours;
 	private Mapping2D map;
 	private ArrayList<DistanceChangedListener> listenerList = new ArrayList<DistanceChangedListener>();
@@ -133,11 +133,12 @@ public class AIPilot extends Thread{
 	public void run() {
 		try {
 			while(Application.getaiOn()) {
-				long start = System.nanoTime();
+				start = System.nanoTime();
 				response = receive(inStream, outStream);
 				delay = (System.nanoTime() - start);
 				distanceChanged();
 				map.trackPosition(angle);
+				map.wallDetection(response[1], response[0], response[2], angle);
 				System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
 				int result = makeDecision(response[1],response[0],response[2]);
 				afficherResultat(result);

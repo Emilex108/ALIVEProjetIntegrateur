@@ -25,7 +25,6 @@ public class Mapping2D extends JFrame {
 	private final double MAXSPEED = 0.4;
 	private final double CAR_WIDTH = 0.20;
 	private final int ABBERATE_DISTANCE = 200;
-	private double lastAngle=0;
 	
 	private Ellipse2D car;
 	
