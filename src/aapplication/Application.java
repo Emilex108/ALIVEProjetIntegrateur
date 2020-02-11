@@ -20,6 +20,7 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import com.fazecast.jSerialComm.SerialPort;
 
 import ai.AIPilot;
+import listeners.DistanceChangedListener;
 import utillities.DetectionPanel;
 import utillities.Test;
 import utillities.TextAreaOutputStream;
@@ -293,6 +294,16 @@ public class Application {
 					try {
 						ai = new AIPilot(outStream, inStream, MLN);
 						ai.start();
+						ai.addDistanceChangedListener(new DistanceChangedListener() {
+							
+							public void distanceChanged(int left, int forward, int right) {
+								detectionPanel.setDistanceG(left);
+								detectionPanel.setDistanceA(forward);
+								detectionPanel.setDistanceD(right);	
+							
+						}
+						});
+					
 					} catch (IOException e) {}
 					btnActivateAi.setText("Deactivate AI");
 				}else {
