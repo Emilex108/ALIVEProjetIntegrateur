@@ -1,8 +1,10 @@
 package geometry;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
+
 
 public class GraphicVector extends Vector implements Drawable {
 	
@@ -15,6 +17,7 @@ public class GraphicVector extends Vector implements Drawable {
 	private double length;
 	private double angle;
 	private final double LABEL_DEPLACEMENT = 0.1;
+	private Color color = Color.black;
 
 	
 	public GraphicVector() {
@@ -50,9 +53,12 @@ public class GraphicVector extends Vector implements Drawable {
 	 * @param g2d Le contexte graphique
 	 */
 	@Override
-	public void dessiner(Graphics2D g2d) {	
+	public void dessiner(Graphics2D g2d, AffineTransform mat) {	
+		Color colorStock = g2d.getColor();
+		g2d.setColor(color);
+		AffineTransform localMat = new AffineTransform(mat);
 		traitDeTete = new Line2D.Double(length -10,0,length, 0);
-		AffineTransform mat = g2d.getTransform();
+		AffineTransform matTemp = g2d.getTransform();
 		g2d.translate(origX, origY);
 		System.out.println("origX = "+origX + "\norigY = "+origY );
 		Line2D.Double body = new Line2D.Double(0,0,length, 0);
@@ -65,7 +71,8 @@ public class GraphicVector extends Vector implements Drawable {
 		g2d.setTransform(mat);
 		
 		creerLabel(g2d);
-		g2d.setTransform(mat);
+		g2d.setTransform(matTemp);
+		g2d.setColor(colorStock);
 	}// fin
 	
 	/**
@@ -112,10 +119,21 @@ public class GraphicVector extends Vector implements Drawable {
 	 * @param label the label to set
 	 */
 	public void setLength(double length) {
-		this.length = length;
+		if(length>=8) {
+			this.length=8;
+			setColor(Color.black);
+		}else {
+			this.length = length;
+			setColor(Color.RED);
+		}
+		
 	}
 	public void setAngle(double angle) {
 		this.angle = angle;
+	}
+	
+	public void setColor(Color color) {
+		this.color = color;
 	}
 	
 

@@ -10,8 +10,8 @@ import javax.swing.JMenuItem;
 
 import geometry.BoxType;
 import geometry.ClassBox;
-import videoFeed.BoxFeed;
-import videoFeed.CapteurFeed;
+import videofeed.BoxFeed;
+import videofeed.CapteurFeed;
 /**
  * This class contains a frame with all the different types of videoFeed we use
  * @author Olivier St-Pierre

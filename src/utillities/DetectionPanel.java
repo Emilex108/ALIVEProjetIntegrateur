@@ -21,6 +21,9 @@ public class DetectionPanel extends JPanel {
 	GraphicVector gvG;
 	GraphicVector gvD;
 	
+	DisplayModel display;
+	private boolean firstTime = false;
+	
 	public DetectionPanel() throws IOException {
 		width = 100;
 		gvG = new GraphicVector(140,135,-150);
@@ -34,11 +37,16 @@ public class DetectionPanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
+		
+		if(!firstTime) {
+			display = new DisplayModel(getWidth(), getHeight(), 0.5);
+		}
+		
 		System.out.println(imgRead.getWidth(null));
 		g2d.drawImage(imgRead,getWidth()/2 - imgRead.getWidth(null)/2,125,(int) width,(int)(width * 1.3),null);
-		gvA.dessiner(g2d);
-		gvG.dessiner(g2d);
-		gvD.dessiner(g2d);
+		gvA.dessiner(g2d, display.getModel());
+		gvG.dessiner(g2d, display.getModel());
+		gvD.dessiner(g2d, display.getModel());
 	}
 
 	public void setDistanceG(int G) {

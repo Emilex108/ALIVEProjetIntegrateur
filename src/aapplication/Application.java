@@ -298,9 +298,11 @@ public class Application {
 							
 							public void distanceChanged(int left, int forward, int right) {
 								detectionPanel.setDistanceG(left);
+								tfLeft.setText(left+"");
 								detectionPanel.setDistanceA(forward);
+								tfMiddle.setText(forward+"");
 								detectionPanel.setDistanceD(right);	
-							
+								tfRight.setText(right+"");
 						}
 						});
 					

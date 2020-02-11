@@ -1,4 +1,4 @@
-package videoFeed;
+package videofeed;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -45,7 +45,7 @@ public class BoxFeed extends VideoFeed{
 	 */
 	public void drawBoxes(Graphics2D g2d) {
 		for(int i = 0; i<boxList.size(); i++) {
-			boxList.get(i).dessiner(g2d);
+			boxList.get(i).dessiner(g2d,null);
 		}
 	}
 }

@@ -31,6 +31,9 @@ public class Mapping2D extends JFrame {
 	private final int ABBERATE_DISTANCE = 8;
 	private final double OBSTACLES_WIDTH = 0.10;
 	
+	private boolean firstTime =false;
+	private DisplayModel display;
+	
 	private Ellipse2D car;
 	
 	public Mapping2D() {
@@ -95,7 +98,11 @@ public class Mapping2D extends JFrame {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Graphics2D g2d = (Graphics2D) g;
-			DisplayModel display = new DisplayModel(getWidth(), getHeight(), 10);	
+			if(!firstTime) {
+				display = new DisplayModel(getWidth(), getHeight(), 10);	
+				firstTime=false;
+			}
+			
 			AffineTransform mat = display.getModel();
 		
 			
