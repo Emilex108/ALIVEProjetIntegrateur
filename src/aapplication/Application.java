@@ -21,8 +21,8 @@ import com.fazecast.jSerialComm.SerialPort;
 
 import ai.AIPilot;
 import listeners.DistanceChangedListener;
-import utillities.DetectionPanel;
-import utillities.TextAreaOutputStream;
+import utilities.DetectionPanel;
+import utilities.TextAreaOutputStream;
 
 import javax.swing.border.LineBorder;
 import java.awt.Color;
@@ -75,7 +75,6 @@ public class Application {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					//Test.getImage();
 					Application window = new Application();
 					window.frame.setVisible(true);
 					SerialPort sp = SerialPort.getCommPort("com8");
@@ -286,7 +285,6 @@ public class Application {
 		JButton btnActivateAi = new JButton("Activate AI");
 
 		btnActivateAi.addActionListener(new ActionListener() {
-			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent arg0) {
 				if(!aiOn) {
 					aiOn = true;

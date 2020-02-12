@@ -12,7 +12,7 @@ import org.nd4j.linalg.factory.Nd4j;
 
 import aapplication.Application;
 import listeners.DistanceChangedListener;
-import utillities.Mapping2D;
+import utilities.Mapping2D;
 /**
  * This class is used to load the trained AI and feed it the data gathered from the car sensors. 
  * It's sole purpose is to analyze that data and give an answer according to it.
@@ -89,21 +89,6 @@ public class AIPilot extends Thread{
 		while(inStream.available()==0);
 		int d = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 		tab[2] = d;
-		outStream.write(103);
-		outStream.flush();
-		while(inStream.available()==0);
-		anglePositive = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
-		System.out.println("Angle signe : " + anglePositive);
-		outStream.write(104);
-		outStream.flush();
-		while(inStream.available()==0);
-		angle = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
-		System.out.println("Angle : " + angle);
-		outStream.write(105);
-		outStream.flush();
-		while(inStream.available()==0);
-		nbDemiTours = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
-		System.out.println("Demi Tours : " + nbDemiTours);
 		return tab;
 	}
 	/**
