@@ -78,7 +78,7 @@ public class Application {
 					//Test.getImage();
 					Application window = new Application();
 					window.frame.setVisible(true);
-					SerialPort sp = SerialPort.getCommPort("com8");
+					SerialPort sp = SerialPort.getCommPort("com6");
 					sp.setComPortParameters(115200, 8, 1, 0);
 					sp.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
 
@@ -268,6 +268,7 @@ public class Application {
 					autoPilotOn = true;
 					btnAutopilotmode.setText("Deactive Autopilot");
 					send(5);
+					
 				}else {
 					autoPilotOn = false;
 					btnAutopilotmode.setText("Activate Autopilot");
