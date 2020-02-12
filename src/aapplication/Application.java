@@ -21,6 +21,7 @@ import com.fazecast.jSerialComm.SerialPort;
 
 import ai.AIPilot;
 import listeners.DistanceChangedListener;
+import threads.GetDistancesOnAutopilot;
 import utilities.DetectionPanel;
 import utilities.TextAreaOutputStream;
 
@@ -67,6 +68,7 @@ public class Application {
 	private static boolean aiOn = false;
 	private static MultiLayerNetwork MLN;
 	private DetectionPanel detectionPanel = null;
+	private static GetDistancesOnAutopilot getDistancesOnAutopilot;
 
 	/**
 	 * Launch the application.
@@ -77,7 +79,7 @@ public class Application {
 				try {
 					Application window = new Application();
 					window.frame.setVisible(true);
-					SerialPort sp = SerialPort.getCommPort("com6");
+					SerialPort sp = SerialPort.getCommPort("com8");
 					sp.setComPortParameters(115200, 8, 1, 0);
 					sp.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
 
@@ -91,6 +93,7 @@ public class Application {
 					MLN = MultiLayerNetwork.load(new File("resources/AI.zip"), false);
 					outStream = sp.getOutputStream();
 					inStream = sp.getInputStream();
+					getDistancesOnAutopilot = new GetDistancesOnAutopilot();
 					System.out.println("Ready");
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -267,10 +270,12 @@ public class Application {
 					autoPilotOn = true;
 					btnAutopilotmode.setText("Deactive Autopilot");
 					send(5);
+					getDistancesOnAutopilot.start();
 				}else {
 					autoPilotOn = false;
 					btnAutopilotmode.setText("Activate Autopilot");
 					send(6);
+					getDistancesOnAutopilot.stop();
 					try {
 						Thread.sleep(50);
 					} catch (InterruptedException e) {
