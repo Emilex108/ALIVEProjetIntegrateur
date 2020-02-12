@@ -80,7 +80,7 @@ public class ClassBox implements Drawable{
 	/**
 	 * To draw the box and their class on the image
 	 */
-	public void dessiner(Graphics2D g2d, AffineTransform mat){
+	public void dessiner(Graphics2D g2d){
 		Color colorTemp = g2d.getColor();
 		AffineTransform atr = g2d.getTransform();
 		g2d.setColor(boxType.getColor());
