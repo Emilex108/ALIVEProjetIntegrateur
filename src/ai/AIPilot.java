@@ -122,7 +122,7 @@ public class AIPilot extends Thread{
 				response = receive(inStream, outStream);
 				delay = (System.nanoTime() - start);
 				distanceChanged();
-				map.trackPosition(angle);
+				map.trackPosition(angle, delay);
 				map.wallDetection(response[1], response[0], response[2], angle);
 				System.out.println("Right : " + response[2] + " Forward : " + response[0] + " Left : " + response[1] + " Delay : " + delay);
 				int result = makeDecision(response[1],response[0],response[2]);

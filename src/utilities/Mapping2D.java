@@ -50,9 +50,9 @@ public class Mapping2D extends JFrame {
 		repaint();
 	}
 	
-	public void trackPosition(int angle) {
+	public void trackPosition(int angle, double nTime) {
 		if(isRolling) {
-			double timeS = Application.getAi().getDelay()*Math.pow(10, -9);
+			double timeS = nTime*Math.pow(10, -9);
 			double angleRad = Math.toRadians(angle);
 			double distance = MAXSPEED*timeS;
 			posX+= distance*Math.sin(angleRad);
