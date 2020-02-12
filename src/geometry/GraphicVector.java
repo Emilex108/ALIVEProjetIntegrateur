@@ -52,13 +52,11 @@ public class GraphicVector extends Vector implements Drawable {
 	 * Dessine le vecteur sous la forme d'une flèche orientée
 	 * @param g2d Le contexte graphique
 	 */
-	@Override
-	public void dessiner(Graphics2D g2d, AffineTransform mat) {	
+	public void dessiner(Graphics2D g2d) {	
 		Color colorStock = g2d.getColor();
 		g2d.setColor(color);
-		AffineTransform localMat = new AffineTransform(mat);
 		traitDeTete = new Line2D.Double(length -10,0,length, 0);
-		AffineTransform matTemp = g2d.getTransform();
+		AffineTransform mat = g2d.getTransform();
 		g2d.translate(origX, origY);
 		System.out.println("origX = "+origX + "\norigY = "+origY );
 		Line2D.Double body = new Line2D.Double(0,0,length, 0);
@@ -71,7 +69,7 @@ public class GraphicVector extends Vector implements Drawable {
 		g2d.setTransform(mat);
 		
 		creerLabel(g2d);
-		g2d.setTransform(matTemp);
+		g2d.setTransform(mat);
 		g2d.setColor(colorStock);
 	}// fin
 	

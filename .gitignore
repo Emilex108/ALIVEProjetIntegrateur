@@ -20,3 +20,4 @@ target/classes/aapplication/Application$8.class
 target/classes/aapplication/Application$9.class
 target/classes/aapplication/Application.class
 target/classes/ai/AIPilot.class
+*.class

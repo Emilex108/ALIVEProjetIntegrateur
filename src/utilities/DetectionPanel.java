@@ -44,9 +44,9 @@ public class DetectionPanel extends JPanel {
 		
 		System.out.println(imgRead.getWidth(null));
 		g2d.drawImage(imgRead,getWidth()/2 - imgRead.getWidth(null)/2,125,(int) width,(int)(width * 1.3),null);
-		gvA.dessiner(g2d, display.getModel());
-		gvG.dessiner(g2d, display.getModel());
-		gvD.dessiner(g2d, display.getModel());
+		gvA.dessiner(g2d);
+		gvG.dessiner(g2d);
+		gvD.dessiner(g2d);
 	}
 
 	public void setDistanceG(int G) {
