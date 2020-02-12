@@ -22,7 +22,6 @@ import com.fazecast.jSerialComm.SerialPort;
 import ai.AIPilot;
 import listeners.DistanceChangedListener;
 import utillities.DetectionPanel;
-import utillities.Test;
 import utillities.TextAreaOutputStream;
 
 import javax.swing.border.LineBorder;
@@ -79,7 +78,7 @@ public class Application {
 					//Test.getImage();
 					Application window = new Application();
 					window.frame.setVisible(true);
-					SerialPort sp = SerialPort.getCommPort("com6");
+					SerialPort sp = SerialPort.getCommPort("com8");
 					sp.setComPortParameters(115200, 8, 1, 0);
 					sp.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
 

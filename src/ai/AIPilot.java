@@ -89,7 +89,7 @@ public class AIPilot extends Thread{
 		while(inStream.available()==0);
 		int d = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 		tab[2] = d;
-		/*outStream.write(103);
+		outStream.write(103);
 		outStream.flush();
 		while(inStream.available()==0);
 		anglePositive = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
@@ -103,7 +103,7 @@ public class AIPilot extends Thread{
 		outStream.flush();
 		while(inStream.available()==0);
 		nbDemiTours = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
-		System.out.println("Demi Tours : " + nbDemiTours);*/
+		System.out.println("Demi Tours : " + nbDemiTours);
 		return tab;
 	}
 	/**
