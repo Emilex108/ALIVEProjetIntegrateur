@@ -268,7 +268,6 @@ public class Application {
 					autoPilotOn = true;
 					btnAutopilotmode.setText("Deactive Autopilot");
 					send(5);
-					
 				}else {
 					autoPilotOn = false;
 					btnAutopilotmode.setText("Activate Autopilot");
