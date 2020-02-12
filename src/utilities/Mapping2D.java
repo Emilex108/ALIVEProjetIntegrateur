@@ -28,7 +28,7 @@ public class Mapping2D extends JFrame {
 	private final double MAXSPEED = 0.4;
 	
 	private final double CAR_WIDTH = 0.20;
-	private final int ABBERATE_DISTANCE = 8;
+	private final int ABBERATE_DISTANCE = 30;
 	private final double OBSTACLES_WIDTH = 0.10;
 	
 	private boolean firstTime =false;
@@ -66,18 +66,18 @@ public class Mapping2D extends JFrame {
 		double posYWall;
 		double angleRad = Math.toRadians(angle);
 		if(distanceLeft<ABBERATE_DISTANCE) {
-			posXWall = posX+distanceLeft/100*Math.sin(angleRad);
-			posYWall = posY+distanceLeft/100*Math.cos(angleRad);
+			posXWall = posX+distanceLeft/100.0*Math.sin(angleRad-Math.toRadians(60));
+			posYWall = posY+distanceLeft/100.0*Math.cos(angleRad-Math.toRadians(60));
 			addPoint(posXWall, posYWall);
 		}
 		if(distanceCenter<ABBERATE_DISTANCE) {
-			posXWall = posX+distanceLeft/100*Math.sin(angleRad);
-			posYWall = posY+distanceLeft/100*Math.cos(angleRad);
+			posXWall = posX+distanceCenter/100.0*Math.sin(angleRad);
+			posYWall = posY+distanceCenter/100.0*Math.cos(angleRad);
 			addPoint(posXWall, posYWall);
 		}
 		if(distanceRight<ABBERATE_DISTANCE) {
-			posXWall = posX+distanceLeft/100*Math.sin(angleRad);
-			posYWall = posY+distanceLeft/100*Math.cos(angleRad);
+			posXWall = posX+distanceCenter/100.0*Math.sin(angleRad+Math.toRadians(60));
+			posYWall = posY+distanceCenter/100.0*Math.cos(angleRad+Math.toRadians(60));
 			addPoint(posXWall, posYWall);
 		}
 		

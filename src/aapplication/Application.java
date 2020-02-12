@@ -79,7 +79,7 @@ public class Application {
 				try {
 					Application window = new Application();
 					window.frame.setVisible(true);
-					SerialPort sp = SerialPort.getCommPort("com8");
+					SerialPort sp = SerialPort.getCommPort("com6");
 					sp.setComPortParameters(115200, 8, 1, 0);
 					sp.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
 
@@ -268,6 +268,17 @@ public class Application {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!autoPilotOn) {
 					autoPilotOn = true;
+					getDistancesOnAutopilot.addDistanceChangedListener(new DistanceChangedListener() {
+							
+							public void distanceChanged(int left, int forward, int right) {
+								detectionPanel.setDistanceG(left);
+								tfLeft.setText(left+"");
+								detectionPanel.setDistanceA(forward);
+								tfMiddle.setText(forward+"");
+								detectionPanel.setDistanceD(right);	
+								tfRight.setText(right+"");
+						}
+						});
 					btnAutopilotmode.setText("Deactive Autopilot");
 					send(5);
 					getDistancesOnAutopilot.start();
