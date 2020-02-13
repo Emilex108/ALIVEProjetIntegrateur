@@ -54,7 +54,7 @@ public class GetDistancesOnAutopilot extends Thread{
 				outStream.write(102);
 				outStream.flush();
 				while(inStream.available()==0);
-				int d = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
+				d = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 				outStream.write(106);
 				outStream.flush();
 				while(inStream.available()==0);
@@ -65,7 +65,6 @@ public class GetDistancesOnAutopilot extends Thread{
 					map.setRolling(false);
 				}
 				System.out.println("isRolling : " + isRolling);
-				d = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 				distanceChanged();
 				endTime = System.nanoTime()-startTime;
 				map.trackPosition(Utilities.calculateAngle(angle, nbHalfTurn, angleSign), endTime);
