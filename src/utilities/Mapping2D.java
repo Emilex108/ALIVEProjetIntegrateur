@@ -58,12 +58,14 @@ public class Mapping2D extends JFrame {
 			posX+= distance*Math.sin(angleRad);
 			posY+= distance*Math.cos(angleRad);
 			repaint();
+			System.out.println("Position moved");
 		}
+		System.out.println("TrackedPosition false");
 	}
 	
 	public void wallDetection(int distanceLeft, int distanceCenter, int distanceRight, int angle) {
-		double posXWall;
-		double posYWall;
+		double posXWall = 0;
+		double posYWall = 0;
 		double angleRad = Math.toRadians(angle);
 		if(distanceLeft<ABBERATE_DISTANCE) {
 			posXWall = posX+distanceLeft/100.0*Math.sin(angleRad-Math.toRadians(60));
@@ -85,7 +87,6 @@ public class Mapping2D extends JFrame {
 	
 	public void setRolling(boolean isRolling) {
 		this.isRolling = isRolling;
-		System.out.println(isRolling);
 	}
 	
 	private class DrawPanel extends JPanel {

@@ -69,6 +69,7 @@ public class GetDistancesOnAutopilot extends Thread{
 				distanceChanged();
 				endTime = System.nanoTime()-startTime;
 				map.trackPosition(Utilities.calculateAngle(angle, nbHalfTurn, angleSign), endTime);
+				System.out.println("TrackPosition call");
 				map.wallDetection(g, a, d, Utilities.calculateAngle(angle, nbHalfTurn, angleSign));
 			}catch(Exception e) {}
 		}
