@@ -64,6 +64,7 @@ public class GetDistancesOnAutopilot extends Thread{
 				}else {
 					map.setRolling(false);
 				}
+				System.out.println("isRolling : " + isRolling);
 				d = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 				distanceChanged();
 				endTime = System.nanoTime()-startTime;
