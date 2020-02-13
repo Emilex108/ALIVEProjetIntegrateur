@@ -83,6 +83,10 @@ public class Mapping2D extends JFrame {
 		
 	}
 	
+	public void setRolling(boolean isRolling) {
+		this.isRolling = isRolling;
+	}
+	
 	private class DrawPanel extends JPanel {
 		
 		/**
