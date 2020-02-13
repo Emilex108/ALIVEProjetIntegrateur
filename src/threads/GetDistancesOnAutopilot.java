@@ -13,7 +13,7 @@ public class GetDistancesOnAutopilot extends Thread{
 
 	InputStream inStream;
 	OutputStream outStream;
-	int angleSign, angle, nbHalfTurn,a,d,g;
+	int angleSign, angle, nbHalfTurn,a,d,g,isRolling;
 	long startTime, endTime;
 	Mapping2D map;
 
@@ -52,6 +52,15 @@ public class GetDistancesOnAutopilot extends Thread{
 				outStream.flush();
 				while(inStream.available()==0);
 				int d = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
+				outStream.write(106);
+				outStream.flush();
+				while(inStream.available()==0);
+				int isRolling = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
+				if(isRolling == 1) {
+					map.setRolling = true;
+				}else {
+					map.setRolling = false;
+				}
 				endTime = System.nanoTime()-startTime;
 				map.trackPosition(Utilities.calculateAngle(angle, nbHalfTurn, angleSign), endTime);
 				map.wallDetection(g, a, d, Utilities.calculateAngle(angle, nbHalfTurn, angleSign));
