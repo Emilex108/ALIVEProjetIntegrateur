@@ -60,9 +60,9 @@ public class GetDistancesOnAutopilot extends Thread{
 				while(inStream.available()==0);
 				int isRolling = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 				if(isRolling == 1) {
-					map.setRolling = true;
+					map.setRolling(true);
 				}else {
-					map.setRolling = false;
+					map.setRolling(false);
 				}
 				d = Integer.parseInt(Jsoup.parse(inStream.read()+"").text());
 				distanceChanged();
