@@ -42,7 +42,6 @@ public class DetectionPanel extends JPanel {
 			display = new DisplayModel(getWidth(), getHeight(), 0.5);
 		}
 		
-		System.out.println(imgRead.getWidth(null));
 		g2d.drawImage(imgRead,getWidth()/2 - imgRead.getWidth(null)/2,125,(int) width,(int)(width * 1.3),null);
 		gvA.dessiner(g2d);
 		gvG.dessiner(g2d);

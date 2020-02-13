@@ -43,7 +43,6 @@ public class GraphicVector extends Vector implements Drawable {
 		this.angle = angle;
 	}
 	private void creerLabel(Graphics2D g2d) {
-		System.out.println(label + " " + x + "/" + y);
 		g2d.translate(origX + x *(1 + LABEL_DEPLACEMENT), origY + y * (1 + LABEL_DEPLACEMENT));
 		g2d.drawString(label, 0, 0);
 	}
@@ -58,7 +57,6 @@ public class GraphicVector extends Vector implements Drawable {
 		traitDeTete = new Line2D.Double(length -10,0,length, 0);
 		AffineTransform mat = g2d.getTransform();
 		g2d.translate(origX, origY);
-		System.out.println("origX = "+origX + "\norigY = "+origY );
 		Line2D.Double body = new Line2D.Double(0,0,length, 0);
 		g2d.rotate(Math.toRadians(angle));
 		g2d.draw(body);  										//ligne formant le vecteur lui-meme
