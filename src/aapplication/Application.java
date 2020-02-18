@@ -1,33 +1,17 @@
 package aapplication;
 
-import java.awt.EventQueue;
-import java.awt.Graphics2D;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import java.awt.Image;
-
-import javax.swing.JPanel;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.border.TitledBorder;
-
-import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
-import com.fazecast.jSerialComm.SerialPort;
-
-import ai.AIPilot;
-import listeners.DistanceChangedListener;
-import threads.GetDistancesOnAutopilot;
-import utilities.DetectionPanel;
-import utilities.TextAreaOutputStream;
-
-import javax.swing.border.LineBorder;
 import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -36,19 +20,35 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.awt.event.ActionEvent;
-import javax.swing.JScrollPane;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
-import java.awt.Font;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSlider;
-import javax.swing.event.ChangeListener;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
-import java.awt.GridLayout;
+import javax.swing.event.ChangeListener;
+
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+
+import com.fazecast.jSerialComm.SerialPort;
+
+import ai.AIPilot;
+import listeners.DistanceChangedListener;
+import threads.GetDistancesOnAutopilot;
+import utilities.DetectionPanel;
+import utilities.TextAreaOutputStream;
 /**
  * This is the main application of the ALIVE project, it manages the different threads and allows the user to interact with the car.
  * @author Émile Gagné & Guillaume Blain
@@ -70,6 +70,12 @@ public class Application {
 	private DetectionPanel detectionPanel = null;
 	private static GetDistancesOnAutopilot getDistancesOnAutopilot;
 
+	
+	//Translating variables
+	private String language="fr";
+	private Locale currentLocale;
+	private ResourceBundle texts;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -113,6 +119,7 @@ public class Application {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		loadLanguage();
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1091, 662);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -120,7 +127,7 @@ public class Application {
 
 		JPanel panelControl = new JPanel();
 		panelControl.requestFocusInWindow();
-		panelControl.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), "Control", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelControl.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true),texts.getString("controlPanel"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelControl.setBounds(7, 0, 333, 310);
 		frame.getContentPane().add(panelControl);
 		panelControl.setLayout(null);
@@ -199,7 +206,7 @@ public class Application {
 		});
 		panelControl.add(btnRight);
 
-		JButton btnLeft = new JButton("Left");
+		JButton btnLeft = new JButton("left");
 		btnLeft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
@@ -228,7 +235,8 @@ public class Application {
 		associateImageWithButton(btnDown, "Up.png",2);
 		associateImageWithButton(btnLeft, "Up.png",3);
 		
-		JCheckBox chckbxModeClavier = new JCheckBox("Keyboard control mode");
+		JCheckBox chckbxModeClavier = new JCheckBox(texts.getString("keyboardControl"));
+
 		chckbxModeClavier.setSelected(false);
 		chckbxModeClavier.addFocusListener(new FocusAdapter() {
 			@Override
@@ -263,7 +271,7 @@ public class Application {
 		panelBTN.setBounds(0, 321, 353, 33);
 		frame.getContentPane().add(panelBTN);
 
-		JButton btnAutopilotmode = new JButton("Activate Auto-pilot");
+		JButton btnAutopilotmode = new JButton(texts.getString("autoPilotButton"));
 		btnAutopilotmode.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!autoPilotOn) {
@@ -279,12 +287,12 @@ public class Application {
 								tfRight.setText(right+"");
 						}
 						});
-					btnAutopilotmode.setText("Deactive Autopilot");
+					btnAutopilotmode.setText(texts.getString("autoPilotButtonOff"));
 					send(5);
 					getDistancesOnAutopilot.start();
 				}else {
 					autoPilotOn = false;
-					btnAutopilotmode.setText("Activate Autopilot");
+					btnAutopilotmode.setText(texts.getString("autoPilotButton"));
 					send(6);
 					getDistancesOnAutopilot.stop();
 					try {
@@ -298,7 +306,7 @@ public class Application {
 		});
 		panelBTN.add(btnAutopilotmode);
 		
-		JButton btnActivateAi = new JButton("Activate AI");
+		JButton btnActivateAi = new JButton(texts.getString("aiButton"));
 
 		btnActivateAi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -320,7 +328,7 @@ public class Application {
 						});
 					
 					} catch (IOException e) {}
-					btnActivateAi.setText("Deactivate AI");
+					btnActivateAi.setText(texts.getString("aiButtonOff"));
 				}else {
 					aiOn = false;
 					ai.stop();
@@ -348,6 +356,7 @@ public class Application {
 		panelConsole.add(scrollPane);
 
 		JTextArea txtrConsoleout = new JTextArea();
+		
 		scrollPane.setViewportView(txtrConsoleout);
 		txtrConsoleout.setEditable(false);
 		txtrConsoleout.setBackground(Color.WHITE);
@@ -383,21 +392,21 @@ public class Application {
 		});
 		btnSend.setBounds(443, 224, 79, 23);
 		panelConsole.add(btnSend);
-		panel_Output.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Outputs", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_Output.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), texts.getString("outputPanel"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
 		panel_Output.setBounds(732, 0, 333, 310);
 		frame.getContentPane().add(panel_Output);
 		panel_Output.setLayout(null);
 
-		JLabel lblLeft = new JLabel("Left :");
+		JLabel lblLeft = new JLabel(texts.getString("leftSensor")+":");
 		lblLeft.setBounds(8, 57, 59, 14);
 		panel_Output.add(lblLeft);
 
-		JLabel lblMiddle = new JLabel("Center :");
+		JLabel lblMiddle = new JLabel(texts.getString("centerSensor") +":");
 		lblMiddle.setBounds(8, 88, 59, 14);
 		panel_Output.add(lblMiddle);
 
-		JLabel lblRight = new JLabel("Right :");
+		JLabel lblRight = new JLabel(texts.getString("rightSensor") +":");
 		lblRight.setBounds(8, 119, 59, 14);
 		panel_Output.add(lblRight);
 
@@ -409,14 +418,14 @@ public class Application {
 		});
 		btnReceive.setBounds(66, 147, 86, 23);
 		panel_Output.add(btnReceive);
-
-		JLabel lblSensorsDistance = new JLabel("Distance sensors ");
+		
+		JLabel lblSensorsDistance = new JLabel(texts.getString("sensorsOutput"));
 		lblSensorsDistance.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblSensorsDistance.setBounds(8, 28, 144, 14);
 		panel_Output.add(lblSensorsDistance);
 		
 		JPanel detection_panel = new JPanel();
-		detection_panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Detection", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		detection_panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), texts.getString("detectionPanel"), TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		detection_panel.setBounds(346, 0, 380, 310);
 		frame.getContentPane().add(detection_panel);
 		
@@ -477,7 +486,6 @@ public class Application {
 			}
 		});
 		detectionPanel.repaint();
-		
 	}
 	public void associateImageWithButton(JButton mainButton, String imageFile, int nbRotation) {
 		Image imgRead = null;
@@ -547,6 +555,14 @@ public class Application {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	/**
+	 * This method loads the good LanguageBundle
+	 * @author Olivier
+	 */
+	private void loadLanguage() {
+		currentLocale = new Locale(language);
+		texts = ResourceBundle.getBundle("TraductionBundle", currentLocale);
 	}
 
 	public static OutputStream getOutStream() {

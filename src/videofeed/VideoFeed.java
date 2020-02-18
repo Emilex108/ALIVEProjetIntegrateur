@@ -23,6 +23,7 @@ public class VideoFeed extends JPanel implements Runnable {
 	private boolean animationEnCours = false;
 	private long sleep;
 	
+	
 	private final double FRAME_RATE=30;
 	Thread thread;
 
