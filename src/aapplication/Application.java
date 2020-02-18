@@ -149,6 +149,7 @@ public class Application {
 				System.out.println("up");
 			}
 		});
+		//test a suppr
 		btnUp.setBounds(131, 37, 70, 70);
 		btnUp.addMouseListener(new MouseAdapter() {
 			@Override
