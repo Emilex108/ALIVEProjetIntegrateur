@@ -121,24 +121,25 @@ public class Application {
 
 	/**
 	 * Create the application.
+	 * @throws IOException 
 	 */
-	public Application() {
+	public Application() throws IOException {
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize() throws IOException {
 		loadLanguage();
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1091, 662);
+		frame.setBounds(100, 100, 1204, 867);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		JPanel panelControl = new JPanel();
 		panelControl.requestFocusInWindow();
 		panelControl.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true),texts.getString("controlPanel"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelControl.setBounds(7, 0, 333, 310);
+		panelControl.setBounds(12, 0, 380, 310);
 		frame.getContentPane().add(panelControl);
 		panelControl.setLayout(null);
 		
@@ -274,7 +275,7 @@ public class Application {
 
 
 		JPanel panelBtn = new JPanel();
-		panelBtn.setBounds(0, 321, 353, 33);
+		panelBtn.setBounds(0, 321, 339, 33);
 		frame.getContentPane().add(panelBtn);
 
 		JButton btnAutopilotmode = new JButton(texts.getString("autoPilotButton"));
@@ -400,70 +401,40 @@ public class Application {
 		
 		panel_Output.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), texts.getString("outputPanel"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
-		panel_Output.setBounds(732, 0, 333, 310);
+		panel_Output.setBounds(796, 0, 380, 310);
 		frame.getContentPane().add(panel_Output);
 		panel_Output.setLayout(null);
-
-		JLabel lblLeft = new JLabel(texts.getString("leftSensor")+":");
-		lblLeft.setBounds(8, 57, 59, 14);
-		panel_Output.add(lblLeft);
-
-		JLabel lblMiddle = new JLabel(texts.getString("centerSensor") +":");
-		lblMiddle.setBounds(8, 88, 59, 14);
-		panel_Output.add(lblMiddle);
-
-		JLabel lblRight = new JLabel(texts.getString("rightSensor") +":");
-		lblRight.setBounds(8, 119, 59, 14);
-		panel_Output.add(lblRight);
-
-		JButton btnReceive = new JButton("Receive");
-		btnReceive.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
-			}
-		});
-		btnReceive.setBounds(66, 147, 86, 23);
-		panel_Output.add(btnReceive);
-		
-		JLabel lblSensorsDistance = new JLabel(texts.getString("sensorsOutput"));
-		lblSensorsDistance.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblSensorsDistance.setBounds(8, 28, 144, 14);
-		panel_Output.add(lblSensorsDistance);
 		
 		JPanel detection_panel = new JPanel();
 		detection_panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), texts.getString("detectionPanel"), TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		detection_panel.setBounds(346, 0, 380, 310);
+		detection_panel.setBounds(404, 0, 380, 310);
 		frame.getContentPane().add(detection_panel);
-		
-		try {
-			panelDetection = new DetectionPanel();
-			panelDetection.setBounds(5, 47, 370, 258);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
 		detection_panel.setLayout(null);
-		detection_panel.add(panelDetection);
-
-		tfLeft = new JTextField();
-		tfLeft.setBounds(30, 16, 86, 20);
-		panelDetection.add(tfLeft);
-		tfLeft.setEditable(false);
-		tfLeft.setColumns(10);
-
-		tfMiddle = new JTextField();
-		tfMiddle.setBounds(146, 16, 86, 20);
-		panelDetection.add(tfMiddle);
-		tfMiddle.setEditable(false);
-		tfMiddle.setColumns(10);
-
-		tfRight = new JTextField();
-		tfRight.setBounds(262, 16, 86, 20);
-		panelDetection.add(tfRight);
-		tfRight.setEditable(false);
-		tfRight.setColumns(10);
+								
+										tfLeft = new JTextField();
+										detection_panel.add(tfLeft);
+										tfLeft.setBounds(30, 37, 86, 20);
+										tfLeft.setEditable(false);
+										tfLeft.setColumns(10);
+										
+												tfRight = new JTextField();
+												tfRight.setBounds(146, 36, 86, 21);
+												detection_panel.add(tfRight);
+												tfRight.setEditable(false);
+												tfRight.setColumns(10);
+												
+														tfMiddle = new JTextField();
+														detection_panel.add(tfMiddle);
+														tfMiddle.setBounds(262, 37, 86, 21);
+														tfMiddle.setEditable(false);
+														tfMiddle.setColumns(10);
+														panelDetection = new DetectionPanel();
+														panelDetection.setBounds(5, 24, 370, 281);
+														detection_panel.add(panelDetection);
+								panelDetection.repaint();
 
 		JPanel panelSlider = new JPanel();
-		panelSlider.setBounds(363, 321, 390, 33);
+		panelSlider.setBounds(349, 321, 377, 33);
 		frame.getContentPane().add(panelSlider);
 		panelSlider.setLayout(new GridLayout(0, 3, 0, 0));
 
@@ -490,7 +461,6 @@ public class Application {
 				panelDetection.setDistanceG((int) (slider.getValue() * 1.25));
 			}
 		});
-		panelDetection.repaint();
 	}
 
 	public void associateImageWithButton(JButton mainButton, String imageFile, int nbRotation) {
