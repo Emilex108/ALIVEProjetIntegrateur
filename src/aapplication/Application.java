@@ -49,29 +49,6 @@ import listeners.DistanceChangedListener;
 import threads.GetData;
 import utilities.DetectionPanel;
 import utilities.TextAreaOutputStream;
-
-import javax.swing.border.LineBorder;
-import java.awt.Color;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.awt.event.ActionEvent;
-import javax.swing.JScrollPane;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import javax.swing.JCheckBox;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import javax.swing.JSlider;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import java.awt.GridLayout;
 /**
  * This is the main application of the ALIVE project, it manages the different threads and allows the user to interact with the car.
  * @author Émile Gagné & Guillaume Blain
@@ -85,12 +62,12 @@ public class Application {
 	private static JTextField tfLeft;
 	private static JTextField tfMiddle;
 	private static JTextField tfRight;
-	private static JPanel panelOutput;
+	private static JPanel panel_Output;
 	private static AIPilot ai;
 	private static boolean autoPilotOn = false;
 	private static boolean aiOn = false;
 	private static MultiLayerNetwork MLN;
-	private static DetectionPanel detectionPanel;
+	private static DetectionPanel panelDetection;
 	private static GetData getData;
 
 	
@@ -126,11 +103,11 @@ public class Application {
 					getData.start();
 					getData.addDistanceChangedListener(new DistanceChangedListener() {
 						public void distanceChanged(int left, int forward, int right) {
-							detectionPanel.setDistanceG(left);
+							panelDetection.setDistanceG(left);
 							tfLeft.setText(left+"");
-							detectionPanel.setDistanceA(forward);
+							panelDetection.setDistanceA(forward);
 							tfMiddle.setText(forward+"");
-							detectionPanel.setDistanceD(right);	
+							panelDetection.setDistanceD(right);	
 							tfRight.setText(right+"");
 						} 
 					});
@@ -305,14 +282,14 @@ public class Application {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!autoPilotOn) {
 					autoPilotOn = true;
-					getDistancesOnAutopilot.addDistanceChangedListener(new DistanceChangedListener() {
+					getData.addDistanceChangedListener(new DistanceChangedListener() {
 							
 							public void distanceChanged(int left, int forward, int right) {
-								detectionPanel.setDistanceG(left);
+								panelDetection.setDistanceG(left);
 								tfLeft.setText(left+"");
-								detectionPanel.setDistanceA(forward);
+								panelDetection.setDistanceA(forward);
 								tfMiddle.setText(forward+"");
-								detectionPanel.setDistanceD(right);	
+								panelDetection.setDistanceD(right);	
 								tfRight.setText(right+"");
 						}
 						});
@@ -331,7 +308,7 @@ public class Application {
 				}
 			}
 		});
-		panelBTN.add(btnAutopilotmode);
+		panelBtn.add(btnAutopilotmode);
 		
 		JButton btnActivateAi = new JButton(texts.getString("aiButton"));
 
@@ -345,11 +322,11 @@ public class Application {
 						ai.addDistanceChangedListener(new DistanceChangedListener() {
 
 							public void distanceChanged(int left, int forward, int right) {
-								detectionPanel.setDistanceG(left);
+								panelDetection.setDistanceG(left);
 								tfLeft.setText(left+"");
-								detectionPanel.setDistanceA(forward);
+								panelDetection.setDistanceA(forward);
 								tfMiddle.setText(forward+"");
-								detectionPanel.setDistanceD(right);	
+								panelDetection.setDistanceD(right);	
 								tfRight.setText(right+"");
 							}
 						});
@@ -459,13 +436,13 @@ public class Application {
 		frame.getContentPane().add(detection_panel);
 		
 		try {
-			detectionPanel = new DetectionPanel();
-			detectionPanel.setBounds(5, 47, 370, 258);
+			panelDetection = new DetectionPanel();
+			panelDetection.setBounds(5, 47, 370, 258);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 		panelDetection.setLayout(null);
-		panelDetection.add(detectionPanel);
+		panelDetection.add(panelDetection);
 
 		tfLeft = new JTextField();
 		tfLeft.setBounds(30, 16, 86, 20);
@@ -496,7 +473,7 @@ public class Application {
 		JSlider slider_1 = new JSlider();
 		slider_1.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				detectionPanel.setDistanceA((int) (slider_1.getValue() * 1.25));
+				panelDetection.setDistanceA((int) (slider_1.getValue() * 1.25));
 			}
 		});
 		panelSlider.add(slider_1);
@@ -504,16 +481,16 @@ public class Application {
 		JSlider slider_2 = new JSlider();
 		slider_2.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				detectionPanel.setDistanceD((int) (slider_2.getValue() * 1.25));
+				panelDetection.setDistanceD((int) (slider_2.getValue() * 1.25));
 			}
 		});
 		panelSlider.add(slider_2);
 		slider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
-				detectionPanel.setDistanceG((int) (slider.getValue() * 1.25));
+				panelDetection.setDistanceG((int) (slider.getValue() * 1.25));
 			}
 		});
-		detectionPanel.repaint();
+		panelDetection.repaint();
 	}
 
 	public void associateImageWithButton(JButton mainButton, String imageFile, int nbRotation) {
