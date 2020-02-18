@@ -22,3 +22,7 @@ target/classes/aapplication/Application.class
 target/classes/ai/AIPilot.class
 *.class
 target/classes/aapplication/Application$1.class
+*.class
+*.class
+*.class
+*.class
