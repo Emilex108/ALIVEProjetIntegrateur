@@ -8,15 +8,14 @@ import java.awt.geom.Line2D;
 
 public class GraphicVector extends Vector implements Drawable {
 	
-	//caractéristiques supplemetaires utiles pour le dessin
-	private double origX=0, origY=0;			 //originep our dessiner le vecteur
-	private Line2D.Double traitDeTete;    //pour tracer la flèche
-	private double angleTete = 0.5;              //angle entre les deux segments formant la tete de fleche
-	private double longueurTete = 20;            //longueur des segments formant la tete (en pixels)
-	private String label = "";
-	private double length;
-	private double angle;
-	private final double LABEL_DEPLACEMENT = 0.1;
+	private double origX=0, origY=0;		
+	private Line2D.Double lineHead;
+	private double angleHead = 0.5;
+	private double lengthHead = 20;
+	private String labelTag = "";
+	private double vectorLength;
+	private double vectorAngle;
+	private final double MOVE_LABEL = 0.1;
 	private Color color = Color.black;
 
 	
@@ -27,24 +26,24 @@ public class GraphicVector extends Vector implements Drawable {
 	public GraphicVector (double origX, double origY) {
 		this.origX = origX;
 		this.origY = origY;
-		length = 100;
-		angle = 0;
+		vectorLength = 100;
+		vectorAngle = 0;
 	}
 	public GraphicVector (double origX, double origY, double angle) {
 		this.origX = origX;
 		this.origY = origY;
-		this.length = 50;
-		this.angle = angle;
+		this.vectorLength = 50;
+		this.vectorAngle = angle;
 	}
 	public GraphicVector (double origX, double origY, double length, double angle) {
 		this.origX = origX;
 		this.origY = origY;
-		this.length = length;
-		this.angle = angle;
+		this.vectorLength = length;
+		this.vectorAngle = angle;
 	}
 	private void creerLabel(Graphics2D g2d) {
-		g2d.translate(origX + x *(1 + LABEL_DEPLACEMENT), origY + y * (1 + LABEL_DEPLACEMENT));
-		g2d.drawString(label, 0, 0);
+		g2d.translate(origX + x *(1 + MOVE_LABEL), origY + y * (1 + MOVE_LABEL));
+		g2d.drawString(labelTag, 0, 0);
 	}
 	
 	/**
@@ -54,22 +53,22 @@ public class GraphicVector extends Vector implements Drawable {
 	public void dessiner(Graphics2D g2d) {	
 		Color colorStock = g2d.getColor();
 		g2d.setColor(color);
-		traitDeTete = new Line2D.Double(length -10,0,length, 0);
+		lineHead = new Line2D.Double(vectorLength -10,0,vectorLength, 0);
 		AffineTransform mat = g2d.getTransform();
 		g2d.translate(origX, origY);
-		Line2D.Double body = new Line2D.Double(0,0,length, 0);
-		g2d.rotate(Math.toRadians(angle));
-		g2d.draw(body);  										//ligne formant le vecteur lui-meme
-		g2d.rotate(angleTete/2, length, 0);
-		g2d.draw(traitDeTete); 										//un des deux traits qui forment la tete du vecteur
-		g2d.rotate(-angleTete, length, 0);
-		g2d.draw(traitDeTete);
+		Line2D.Double body = new Line2D.Double(0,0,vectorLength, 0);
+		g2d.rotate(Math.toRadians(vectorAngle));
+		g2d.draw(body);
+		g2d.rotate(angleHead/2, vectorLength, 0);
+		g2d.draw(lineHead);
+		g2d.rotate(-angleHead, vectorLength, 0);
+		g2d.draw(lineHead);
 		g2d.setTransform(mat);
 		
 		creerLabel(g2d);
 		g2d.setTransform(mat);
 		g2d.setColor(colorStock);
-	}// fin
+	}
 	
 	/**
 	 * Modifie l'origine du vecteur pour son dessin
@@ -86,7 +85,7 @@ public class GraphicVector extends Vector implements Drawable {
 	 * @return Longueur du segment
 	 */
 	public double getLongueurTete() {
-		return longueurTete;
+		return lengthHead;
 	}
 
 	/**
@@ -94,38 +93,38 @@ public class GraphicVector extends Vector implements Drawable {
 	 * @param longueurTete longueur du segment
 	 */
 	public void setLongueurTete(double longueurTete) {
-		this.longueurTete = longueurTete;
+		this.lengthHead = longueurTete;
 	}
 
 	/**
-	 * Mets l'angle de la tête
-	 * @param angleTete L'angle de la tête
+	 * Sets the head angle
+	 * @param angleHead L'angle de la tête
 	 */
-	public void setAngleTete(double angleTete) {
-		this.angleTete = angleTete;
+	public void setAngleTete(double angleHead) {
+		this.angleHead = angleHead;
 	}
 
 	/**
-	 * @param label the label to set
+	 * @param label The label to set
 	 */
 	public void setLabel(String label) {
-		this.label = label;
+		this.labelTag = label;
 	}
 	/**
-	 * @param label the label to set
+	 * @param length The length to set
 	 */
 	public void setLength(double length) {
 		if(length>=8) {
-			this.length=8;
+			this.vectorLength=8;
 			setColor(Color.black);
 		}else {
-			this.length = length;
+			this.vectorLength = length;
 			setColor(Color.RED);
 		}
 		
 	}
 	public void setAngle(double angle) {
-		this.angle = angle;
+		this.vectorAngle = angle;
 	}
 	
 	public void setColor(Color color) {

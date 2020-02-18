@@ -21,7 +21,7 @@ import com.fazecast.jSerialComm.SerialPort;
 
 import ai.AIPilot;
 import listeners.DistanceChangedListener;
-import threads.GetDistancesOnAutopilot;
+import threads.GetData;
 import utilities.DetectionPanel;
 import utilities.TextAreaOutputStream;
 
@@ -43,8 +43,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.JCheckBox;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import javax.swing.JLabel;
-import java.awt.Font;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
@@ -56,19 +54,19 @@ import java.awt.GridLayout;
 public class Application {
 
 	private JFrame frame;
-	private JTextField txtConsolein;
+	private static JTextField txtConsolein;
 	private static OutputStream outStream;
 	private static InputStream inStream;
 	private static JTextField tfLeft;
 	private static JTextField tfMiddle;
 	private static JTextField tfRight;
-	private JPanel panel_Output = new JPanel();
+	private static JPanel panelOutput;
 	private static AIPilot ai;
 	private static boolean autoPilotOn = false;
 	private static boolean aiOn = false;
 	private static MultiLayerNetwork MLN;
-	private DetectionPanel detectionPanel = null;
-	private static GetDistancesOnAutopilot getDistancesOnAutopilot;
+	private static DetectionPanel detectionPanel;
+	private static GetData getData;
 
 	/**
 	 * Launch the application.
@@ -79,7 +77,7 @@ public class Application {
 				try {
 					Application window = new Application();
 					window.frame.setVisible(true);
-					SerialPort sp = SerialPort.getCommPort("com8");
+					SerialPort sp = SerialPort.getCommPort("com14");
 					sp.setComPortParameters(115200, 8, 1, 0);
 					sp.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
 
@@ -93,7 +91,18 @@ public class Application {
 					MLN = MultiLayerNetwork.load(new File("resources/AI.zip"), false);
 					outStream = sp.getOutputStream();
 					inStream = sp.getInputStream();
-					getDistancesOnAutopilot = new GetDistancesOnAutopilot();
+					getData = new GetData();
+					getData.start();
+					getData.addDistanceChangedListener(new DistanceChangedListener() {
+						public void distanceChanged(int left, int forward, int right) {
+							detectionPanel.setDistanceG(left);
+							tfLeft.setText(left+"");
+							detectionPanel.setDistanceA(forward);
+							tfMiddle.setText(forward+"");
+							detectionPanel.setDistanceD(right);	
+							tfRight.setText(right+"");
+						} 
+					});
 					System.out.println("Ready");
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -117,16 +126,13 @@ public class Application {
 		frame.setBounds(100, 100, 1091, 662);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-
 		JPanel panelControl = new JPanel();
 		panelControl.requestFocusInWindow();
 		panelControl.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), "Control", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelControl.setBounds(7, 0, 333, 310);
 		frame.getContentPane().add(panelControl);
 		panelControl.setLayout(null);
-
-
-
+		
 		JButton btnUp = new JButton("Up");
 		btnUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -144,7 +150,6 @@ public class Application {
 			public void mousePressed(MouseEvent e) {
 				associateImageWithButton(btnUp, "Up.png",0);
 				send(3);
-				
 			}public void mouseReleased(MouseEvent e) {
 				associateImageWithButton(btnUp, "Up2.png",0);
 				send(0);
@@ -227,7 +232,7 @@ public class Application {
 		associateImageWithButton(btnRight, "Up.png",1);
 		associateImageWithButton(btnDown, "Up.png",2);
 		associateImageWithButton(btnLeft, "Up.png",3);
-		
+
 		JCheckBox chckbxModeClavier = new JCheckBox("Keyboard control mode");
 		chckbxModeClavier.setSelected(false);
 		chckbxModeClavier.addFocusListener(new FocusAdapter() {
@@ -259,34 +264,22 @@ public class Application {
 		panelControl.add(chckbxModeClavier);
 
 
-		JPanel panelBTN = new JPanel();
-		panelBTN.setBounds(0, 321, 353, 33);
-		frame.getContentPane().add(panelBTN);
+		JPanel panelBtn = new JPanel();
+		panelBtn.setBounds(0, 321, 353, 33);
+		frame.getContentPane().add(panelBtn);
 
 		JButton btnAutopilotmode = new JButton("Activate Auto-pilot");
 		btnAutopilotmode.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!autoPilotOn) {
 					autoPilotOn = true;
-					getDistancesOnAutopilot.addDistanceChangedListener(new DistanceChangedListener() {
-							
-							public void distanceChanged(int left, int forward, int right) {
-								detectionPanel.setDistanceG(left);
-								tfLeft.setText(left+"");
-								detectionPanel.setDistanceA(forward);
-								tfMiddle.setText(forward+"");
-								detectionPanel.setDistanceD(right);	
-								tfRight.setText(right+"");
-						}
-						});
+					System.out.println("auto ON");
 					btnAutopilotmode.setText("Deactive Autopilot");
 					send(5);
-					getDistancesOnAutopilot.start();
 				}else {
 					autoPilotOn = false;
 					btnAutopilotmode.setText("Activate Autopilot");
 					send(6);
-					getDistancesOnAutopilot.stop();
 					try {
 						Thread.sleep(50);
 					} catch (InterruptedException e) {
@@ -296,8 +289,8 @@ public class Application {
 				}
 			}
 		});
-		panelBTN.add(btnAutopilotmode);
-		
+		panelBtn.add(btnAutopilotmode);
+
 		JButton btnActivateAi = new JButton("Activate AI");
 
 		btnActivateAi.addActionListener(new ActionListener() {
@@ -308,7 +301,7 @@ public class Application {
 						ai = new AIPilot(outStream, inStream, MLN);
 						ai.start();
 						ai.addDistanceChangedListener(new DistanceChangedListener() {
-							
+
 							public void distanceChanged(int left, int forward, int right) {
 								detectionPanel.setDistanceG(left);
 								tfLeft.setText(left+"");
@@ -316,9 +309,9 @@ public class Application {
 								tfMiddle.setText(forward+"");
 								detectionPanel.setDistanceD(right);	
 								tfRight.setText(right+"");
-						}
+							}
 						});
-					
+
 					} catch (IOException e) {}
 					btnActivateAi.setText("Deactivate AI");
 				}else {
@@ -334,9 +327,9 @@ public class Application {
 				}
 			}
 		});
-		panelBTN.add(btnActivateAi);
-		
-		
+		panelBtn.add(btnActivateAi);
+
+
 
 		JPanel panelConsole = new JPanel();
 		panelConsole.setBounds(0, 365, 532, 247);
@@ -383,102 +376,77 @@ public class Application {
 		});
 		btnSend.setBounds(443, 224, 79, 23);
 		panelConsole.add(btnSend);
-		panel_Output.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Outputs", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelOutput = new JPanel();
+		panelOutput.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Outputs", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
-		panel_Output.setBounds(732, 0, 333, 310);
-		frame.getContentPane().add(panel_Output);
-		panel_Output.setLayout(null);
+		panelOutput.setBounds(732, 0, 333, 310);
+		frame.getContentPane().add(panelOutput);
+		panelOutput.setLayout(null);
 
-		JLabel lblLeft = new JLabel("Left :");
-		lblLeft.setBounds(8, 57, 59, 14);
-		panel_Output.add(lblLeft);
+		JPanel panelDetection = new JPanel();
+		panelDetection.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Detection", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelDetection.setBounds(346, 0, 380, 310);
+		frame.getContentPane().add(panelDetection);
 
-		JLabel lblMiddle = new JLabel("Center :");
-		lblMiddle.setBounds(8, 88, 59, 14);
-		panel_Output.add(lblMiddle);
-
-		JLabel lblRight = new JLabel("Right :");
-		lblRight.setBounds(8, 119, 59, 14);
-		panel_Output.add(lblRight);
-
-		JButton btnReceive = new JButton("Receive");
-		btnReceive.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
-			}
-		});
-		btnReceive.setBounds(66, 147, 86, 23);
-		panel_Output.add(btnReceive);
-
-		JLabel lblSensorsDistance = new JLabel("Distance sensors ");
-		lblSensorsDistance.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblSensorsDistance.setBounds(8, 28, 144, 14);
-		panel_Output.add(lblSensorsDistance);
-		
-		JPanel detection_panel = new JPanel();
-		detection_panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Detection", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		detection_panel.setBounds(346, 0, 380, 310);
-		frame.getContentPane().add(detection_panel);
-		
 		try {
 			detectionPanel = new DetectionPanel();
 			detectionPanel.setBounds(5, 47, 370, 258);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		detection_panel.setLayout(null);
-		detection_panel.add(detectionPanel);
-		
-				tfLeft = new JTextField();
-				tfLeft.setBounds(30, 16, 86, 20);
-				detection_panel.add(tfLeft);
-				tfLeft.setEditable(false);
-				tfLeft.setColumns(10);
-				
-						tfMiddle = new JTextField();
-						tfMiddle.setBounds(146, 16, 86, 20);
-						detection_panel.add(tfMiddle);
-						tfMiddle.setEditable(false);
-						tfMiddle.setColumns(10);
-						
-								tfRight = new JTextField();
-								tfRight.setBounds(262, 16, 86, 20);
-								detection_panel.add(tfRight);
-								tfRight.setEditable(false);
-								tfRight.setColumns(10);
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(363, 321, 390, 33);
-		frame.getContentPane().add(panel);
-		panel.setLayout(new GridLayout(0, 3, 0, 0));
-		
+		panelDetection.setLayout(null);
+		panelDetection.add(detectionPanel);
+
+		tfLeft = new JTextField();
+		tfLeft.setBounds(30, 16, 86, 20);
+		panelDetection.add(tfLeft);
+		tfLeft.setEditable(false);
+		tfLeft.setColumns(10);
+
+		tfMiddle = new JTextField();
+		tfMiddle.setBounds(146, 16, 86, 20);
+		panelDetection.add(tfMiddle);
+		tfMiddle.setEditable(false);
+		tfMiddle.setColumns(10);
+
+		tfRight = new JTextField();
+		tfRight.setBounds(262, 16, 86, 20);
+		panelDetection.add(tfRight);
+		tfRight.setEditable(false);
+		tfRight.setColumns(10);
+
+		JPanel panelSlider = new JPanel();
+		panelSlider.setBounds(363, 321, 390, 33);
+		frame.getContentPane().add(panelSlider);
+		panelSlider.setLayout(new GridLayout(0, 3, 0, 0));
+
 		JSlider slider = new JSlider();
-		panel.add(slider);
-		
+		panelSlider.add(slider);
+
 		JSlider slider_1 = new JSlider();
 		slider_1.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				detectionPanel.setDistanceA((int) (slider_1.getValue() * 1.25));
 			}
 		});
-		panel.add(slider_1);
-		
+		panelSlider.add(slider_1);
+
 		JSlider slider_2 = new JSlider();
 		slider_2.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				detectionPanel.setDistanceD((int) (slider_2.getValue() * 1.25));
 			}
 		});
-		panel.add(slider_2);
+		panelSlider.add(slider_2);
 		slider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				detectionPanel.setDistanceG((int) (slider.getValue() * 1.25));
 			}
 		});
 		detectionPanel.repaint();
-		
+
 	}
+
 	public void associateImageWithButton(JButton mainButton, String imageFile, int nbRotation) {
 		Image imgRead = null;
 		try {
@@ -503,6 +471,7 @@ public class Application {
 		imgRead.flush();
 		imgRedim.flush();
 	}
+
 	public BufferedImage rotateCw(BufferedImage img){
 		int width  = img.getWidth();
 		int height = img.getHeight();
@@ -515,22 +484,18 @@ public class Application {
 		}
 		return newImage;
 	}
+
 	public static BufferedImage toBufferedImage(Image img){
 		if (img instanceof BufferedImage){
 			return (BufferedImage) img;
 		}
-
-		// Create a buffered image with transparency
 		BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-
-		// Draw the image on to the buffered image
 		Graphics2D bGr = bimage.createGraphics();
 		bGr.drawImage(img, 0, 0, null);
 		bGr.dispose();
-
-		// Return the buffered image
 		return bimage;
 	}
+
 	public void send(int x){
 		try {
 			outStream.write(x);
@@ -541,6 +506,7 @@ public class Application {
 		}
 
 	}
+
 	public void await(int i) {
 		try {
 			Thread.sleep(i);
@@ -591,7 +557,7 @@ public class Application {
 	public static boolean getautoPilotOn() {
 		return autoPilotOn;
 	}
-	public static boolean getaiOn() {
+	public static boolean getAiOn() {
 		return aiOn;
 	}
 	public static AIPilot getAi(){

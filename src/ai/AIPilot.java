@@ -27,7 +27,7 @@ public class AIPilot extends Thread{
 	private InputStream inStream;
 	private int[] response;
 	private long delay, start;
-	private int angle,anglePositive,nbDemiTours;
+	private int angle;
 	private Mapping2D map;
 	private ArrayList<DistanceChangedListener> listenerList = new ArrayList<DistanceChangedListener>();
 
@@ -117,7 +117,7 @@ public class AIPilot extends Thread{
 	@Override
 	public void run() {
 		try {
-			while(Application.getaiOn()) {
+			while(Application.getAiOn()) {
 				start = System.nanoTime();
 				response = receive(inStream, outStream);
 				delay = (System.nanoTime() - start);
@@ -148,11 +148,11 @@ public class AIPilot extends Thread{
 		return angle;
 	}
 	public void addDistanceChangedListener(DistanceChangedListener listener) {
-        listenerList.add(listener);
-    }
-    public void distanceChanged() {
-        for(DistanceChangedListener listener : listenerList) {
-            listener.distanceChanged(response[1], response[0], response[2]);
-        }
-    }
+		listenerList.add(listener);
+	}
+	public void distanceChanged() {
+		for(DistanceChangedListener listener : listenerList) {
+			listener.distanceChanged(response[1], response[0], response[2]);
+		}
+	}
 }

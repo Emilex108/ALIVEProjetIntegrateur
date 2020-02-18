@@ -12,8 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import aapplication.Application;
-
 public class Mapping2D extends JFrame {
 
 	private static final long serialVersionUID = -4652705085854314829L;
