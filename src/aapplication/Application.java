@@ -397,7 +397,7 @@ public class Application {
 		btnSend.setBounds(443, 224, 79, 23);
 		panelConsole.add(btnSend);
 		panel_Output = new JPanel();
-
+		
 		panel_Output.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), texts.getString("outputPanel"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
 		panel_Output.setBounds(732, 0, 333, 310);
@@ -441,8 +441,8 @@ public class Application {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		panelDetection.setLayout(null);
-		panelDetection.add(panelDetection);
+		detection_panel.setLayout(null);
+		detection_panel.add(panelDetection);
 
 		tfLeft = new JTextField();
 		tfLeft.setBounds(30, 16, 86, 20);
