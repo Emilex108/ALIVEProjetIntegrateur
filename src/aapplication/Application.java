@@ -49,6 +49,10 @@ import listeners.DistanceChangedListener;
 import threads.GetData;
 import utilities.DetectionPanel;
 import utilities.TextAreaOutputStream;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JRadioButtonMenuItem;
 /**
  * This is the main application of the ALIVE project, it manages the different threads and allows the user to interact with the car.
  * @author Émile Gagné & Guillaume Blain
@@ -149,7 +153,7 @@ public class Application {
 				System.out.println("up");
 			}
 		});
-		//test a suppr
+		
 		btnUp.setBounds(131, 37, 70, 70);
 		btnUp.addMouseListener(new MouseAdapter() {
 			@Override
@@ -276,7 +280,7 @@ public class Application {
 
 
 		JPanel panelBtn = new JPanel();
-		panelBtn.setBounds(0, 321, 339, 33);
+		panelBtn.setBounds(33, 321, 339, 33);
 		frame.getContentPane().add(panelBtn);
 
 		JButton btnAutopilotmode = new JButton(texts.getString("autoPilotButton"));
@@ -402,7 +406,7 @@ public class Application {
 		
 		panel_Output.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), texts.getString("outputPanel"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
-		panel_Output.setBounds(796, 0, 380, 310);
+		panel_Output.setBounds(796, 0, 380, 354);
 		frame.getContentPane().add(panel_Output);
 		panel_Output.setLayout(null);
 		
@@ -435,7 +439,7 @@ public class Application {
 								panelDetection.repaint();
 
 		JPanel panelSlider = new JPanel();
-		panelSlider.setBounds(349, 321, 377, 33);
+		panelSlider.setBounds(406, 321, 377, 33);
 		frame.getContentPane().add(panelSlider);
 		panelSlider.setLayout(new GridLayout(0, 3, 0, 0));
 
@@ -457,6 +461,40 @@ public class Application {
 			}
 		});
 		panelSlider.add(slider_2);
+		
+		JPanel panelMapping2D = new JPanel();
+		panelMapping2D.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), texts.getString("Mapping2DPanel"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelMapping2D.setBounds(542, 365, 636, 430);
+		frame.getContentPane().add(panelMapping2D);
+		
+		JMenuBar menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+		
+		JMenu mnNewMenu = new JMenu(texts.getString("Options"));
+		menuBar.add(mnNewMenu);
+		
+		JMenu mnNewMenu_1 = new JMenu("Language");
+		mnNewMenu.add(mnNewMenu_1);
+		
+		JMenuItem mntmEnglish = new JMenuItem("English");
+		mntmEnglish.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				language = "en";
+				loadLanguage();
+				System.out.println("test1");
+			}
+		});
+		mnNewMenu_1.add(mntmEnglish);
+		
+		JMenuItem mntmFrancais = new JMenuItem("Francais");
+		mntmFrancais.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				language = "fr";
+				loadLanguage();
+				System.out.println("test2");
+			}
+		});
+		mnNewMenu_1.add(mntmFrancais);
 		slider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				panelDetection.setDistanceG((int) (slider.getValue() * 1.25));

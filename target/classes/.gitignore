@@ -1,12 +1,1 @@
-
-/ai/
-/geometry/
-/videofeed/
-
-
-/TraductionBundle.properties
-/TraductionBundle_en.properties
-/TraductionBundle_fr.properties
 /aapplication/
-/threads/
-*.class
