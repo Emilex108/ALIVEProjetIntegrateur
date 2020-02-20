@@ -53,6 +53,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JScrollBar;
 /**
  * This is the main application of the ALIVE project, it manages the different threads and allows the user to interact with the car.
  * @author Émile Gagné & Guillaume Blain
@@ -136,6 +137,7 @@ public class Application {
 	 */
 	private void initialize() throws IOException {
 		loadLanguage();
+		//changeLanguageTo("en");
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1204, 867);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -365,6 +367,7 @@ public class Application {
 		scrollPane.setBounds(10, 5, 512, 209);
 		panelConsole.add(scrollPane);
 
+		  JScrollBar vbar = scrollPane.getVerticalScrollBar();
 		JTextArea txtrConsoleout = new JTextArea();
 		
 		scrollPane.setViewportView(txtrConsoleout);
@@ -386,21 +389,22 @@ public class Application {
 				if (e.getKeyChar() == KeyEvent.VK_ENTER) {
 					System.out.println(txtConsolein.getText());
 					txtConsolein.setText("");
+					 vbar.setValue(vbar.getMaximum());
 				}
 			}
 		});
-		txtConsolein.setBounds(10, 225, 423, 20);
+		txtConsolein.setBounds(10, 225, 399, 20);
 		panelConsole.add(txtConsolein);
 		txtConsolein.setColumns(10);
 
-		JButton btnSend = new JButton("Send");
+		JButton btnSend = new JButton(texts.getString("Send"));
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println(txtConsolein.getText());
 				txtConsolein.setText("");
 			}
 		});
-		btnSend.setBounds(443, 224, 79, 23);
+		btnSend.setBounds(419, 224, 103, 23);
 		panelConsole.add(btnSend);
 		panel_Output = new JPanel();
 		
@@ -418,19 +422,19 @@ public class Application {
 								
 										tfLeft = new JTextField();
 										detection_panel.add(tfLeft);
-										tfLeft.setBounds(30, 37, 86, 20);
+										tfLeft.setBounds(30, 21, 86, 20);
 										tfLeft.setEditable(false);
 										tfLeft.setColumns(10);
 										
 												tfRight = new JTextField();
-												tfRight.setBounds(146, 36, 86, 21);
+												tfRight.setBounds(146, 20, 86, 21);
 												detection_panel.add(tfRight);
 												tfRight.setEditable(false);
 												tfRight.setColumns(10);
 												
 														tfMiddle = new JTextField();
 														detection_panel.add(tfMiddle);
-														tfMiddle.setBounds(262, 37, 86, 21);
+														tfMiddle.setBounds(262, 21, 86, 21);
 														tfMiddle.setEditable(false);
 														tfMiddle.setColumns(10);
 														panelDetection = new DetectionPanel();
@@ -473,14 +477,13 @@ public class Application {
 		JMenu mnNewMenu = new JMenu(texts.getString("Options"));
 		menuBar.add(mnNewMenu);
 		
-		JMenu mnNewMenu_1 = new JMenu("Language");
+		JMenu mnNewMenu_1 = new JMenu(texts.getString("Language"));
 		mnNewMenu.add(mnNewMenu_1);
 		
 		JMenuItem mntmEnglish = new JMenuItem("English");
 		mntmEnglish.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				language = "en";
-				loadLanguage();
+				changeLanguageTo("en");
 				System.out.println("test1");
 			}
 		});
@@ -489,9 +492,8 @@ public class Application {
 		JMenuItem mntmFrancais = new JMenuItem("Francais");
 		mntmFrancais.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				language = "fr";
-				loadLanguage();
-				System.out.println("test2");
+				changeLanguageTo("fr");
+				System.out.println("test");
 			}
 		});
 		mnNewMenu_1.add(mntmFrancais);
@@ -574,8 +576,14 @@ public class Application {
 	 * @author Olivier
 	 */
 	private void loadLanguage() {
+
 		currentLocale = new Locale(language);
 		texts = ResourceBundle.getBundle("TraductionBundle", currentLocale);
+	}
+	
+	private void changeLanguageTo(String lang) {
+		language = lang;
+		loadLanguage();
 	}
 
 	public static OutputStream getOutStream() {
